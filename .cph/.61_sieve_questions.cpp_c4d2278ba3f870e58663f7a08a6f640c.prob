@@ -1,0 +1,1 @@
+{"name":"Local: 61_sieve_questions","url":"c:\\Users\\Gaurav\\OneDrive\\Desktop\\Preparation\\61_sieve_questions.cpp","tests":[{"id":1635510353521,"input":"6\n2 3 5 7 4 9\n2\n4 5\n3 7","output":""}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"c:\\Users\\Gaurav\\OneDrive\\Desktop\\Preparation\\61_sieve_questions.cpp","group":"local","local":true}
