@@ -45,40 +45,48 @@ class node{
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-// https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+int minJumps(int arr[], int n)
+{
+    // jumps[n-1] will hold the result
+    int* jumps = new int[n];
+    int i, j;
+ 
+    if (n == 0 || arr[0] == 0)
+        return INT_MAX;
+ 
+    jumps[0] = 0;
+ 
+    // Find the minimum number of jumps to reach arr[i]
+    // from arr[0], and assign this value to jumps[i]
+    for (i = 1; i < n; i++) {
+        jumps[i] = INT_MAX;
+        for (j = 0; j < i; j++) {
+            if (i <= j + arr[j] && jumps[j] != INT_MAX) {
+                jumps[i] = min(jumps[i], jumps[j] + 1);
+                break;
+            }
+        }
+    }
+    return jumps[n - 1];
+}
+
+
 
 int32_t main(){
     
-    
-    string x;
-    cin >> x;
 
-    string y = x;
-    reverse(y.begin(),y.end());
 
-    int n = x.size();
-    
+    int n;
+    cin >> n;
+    int arr[n];
 
-    int dp[n+1][n+1];
-
-    for(int i=0;i<=n;i++){
-        for(int j=0;j<=n;j++){
-            if(i==0 || j==0)
-                dp[i][j] = 0;
-        }
+    for(int i=0;i<n;i++){
+        cin >> arr[i];
     }
 
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=n;j++){
-            if(x[i-1] == y[j-1])
-                dp[i][j] = 1+dp[i-1][j-1];
-            else    
-                dp[i][j] = max(dp[i][j-1],dp[i-1][j]);
-        }
-    }
+    cout << minJumps(arr,n) << endl;
 
-    cout << x.size() -  dp[n][n] << endl;
-    
+
     
     return 0;
 }

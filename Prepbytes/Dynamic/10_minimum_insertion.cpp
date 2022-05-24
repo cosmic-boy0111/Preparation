@@ -49,7 +49,12 @@ vector<bool> visited(N,false);
 
 int32_t main(){
     
+    int t;
+    cin >> t;
+    while (t--){
     
+    int temp;
+    cin >> temp;
     string x;
     cin >> x;
 
@@ -79,6 +84,7 @@ int32_t main(){
 
     cout << x.size() -  dp[n][n] << endl;
     
+    }
     
     return 0;
 }

@@ -45,40 +45,25 @@ class node{
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-// https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
 
+int dp[20];
 int32_t main(){
-    
-    
-    string x;
-    cin >> x;
 
-    string y = x;
-    reverse(y.begin(),y.end());
-
-    int n = x.size();
-    
-
-    int dp[n+1][n+1];
-
-    for(int i=0;i<=n;i++){
-        for(int j=0;j<=n;j++){
-            if(i==0 || j==0)
-                dp[i][j] = 0;
+    dp[1]=1,dp[0]=1;
+    for(int i=2;i<12;i++){
+        int s=0;
+        for(int j=1;j<=i;j++){
+            s+=(dp[j-1]*dp[i-j]);
         }
+        dp[i]=s;
     }
-
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=n;j++){
-            if(x[i-1] == y[j-1])
-                dp[i][j] = 1+dp[i-1][j-1];
-            else    
-                dp[i][j] = max(dp[i][j-1],dp[i-1][j]);
-        }
+    int t;
+    cin >> t;
+    while(t--){
+        int n;
+        cin >> n;
+        cout << dp[n] << endl;
     }
-
-    cout << x.size() -  dp[n][n] << endl;
-    
     
     return 0;
 }

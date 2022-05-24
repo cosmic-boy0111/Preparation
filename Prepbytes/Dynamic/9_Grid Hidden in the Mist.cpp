@@ -45,39 +45,42 @@ class node{
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-// https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+long long dp[500][500];
+
+long long minimumTime(vector<vector<int>> &v,int i,int j,int X,int Y){
+
+    if(i== X and Y==j) return v[i][j];
+
+    if(i > X) return INT_MAX;
+    if(j > Y) return INT_MAX;
+
+    if(dp[i][j] != 0) return dp[i][j];
+
+    return dp[i][j] = min(v[i][j] + minimumTime(v,i+1,j+1,X,Y),min(
+                            v[i][j] + minimumTime(v,i+1,j,X,Y),
+                            v[i][j] + minimumTime(v,i,j+1,X,Y)));
+
+}
 
 int32_t main(){
     
-    
-    string x;
-    cin >> x;
+    int n,m;
+    cin >> n >> m;
 
-    string y = x;
-    reverse(y.begin(),y.end());
-
-    int n = x.size();
-    
-
-    int dp[n+1][n+1];
-
-    for(int i=0;i<=n;i++){
-        for(int j=0;j<=n;j++){
-            if(i==0 || j==0)
-                dp[i][j] = 0;
-        }
+    vector<vector<int>> v;
+    for(int i=0;i<n;i++){
+        vector<int> temp(m);
+        for(auto &x:temp)   
+            cin >> x;
+        v.push_back(temp);
     }
 
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=n;j++){
-            if(x[i-1] == y[j-1])
-                dp[i][j] = 1+dp[i-1][j-1];
-            else    
-                dp[i][j] = max(dp[i][j-1],dp[i-1][j]);
-        }
-    }
+    int X,Y;
+    cin >> X >> Y;
 
-    cout << x.size() -  dp[n][n] << endl;
+    cout << minimumTime(v,0,0,X,Y) << endl;
+
+
     
     
     return 0;

@@ -49,7 +49,7 @@ vector<bool> visited(N,false);
 
 int32_t main(){
     
-    
+
     string x;
     cin >> x;
 
