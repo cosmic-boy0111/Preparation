@@ -1,4 +1,4 @@
-#include <bits/stdc++.h>65
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -76,17 +76,17 @@ int32_t main(){
     for(auto &i:price)
         cin >> i;
 
-    // cout << getMaxProfit(price,length,n,N) << endl;
+    cout << getMaxProfit(price,length,n,N) << endl;
 
-    int dp[n+1][n+1];
+    int dp[n+1][N+1];
     for(int i=0;i<=n;i++){
-        for(int j=0;j<=n;j++){
+        for(int j=0;j<=N;j++){
             if( i==0 || j==0 ) dp[i][j] = 0;
         }
     }
 
     for(int i=1;i<=n;i++){
-        for(int j=1;j<=n;j++){
+        for(int j=1;j<=N;j++){
             if(length[i-1] <= j){
                 dp[i][j] = max(price[i-1] + dp[i][j-length[i-1]], dp[i-1][j]);
             }else{
@@ -95,7 +95,7 @@ int32_t main(){
         }
     }
 
-    cout << dp[n][n] << endl;
+    cout << dp[n][N] << endl;
     
     
     return 0;

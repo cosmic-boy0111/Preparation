@@ -47,20 +47,46 @@ vector<bool> visited(N,false);
 
 int dp[1000][1000];
 
-int solve(vector<int> arr, int i,int j){
+bool isPalindrome(string s,int i,int j){
+    string x = "";
+    for(int k=i;k<=j;k++){
+        x.push_back(s[k]);
+    }
 
-    if(i >= j)
-        return 0;
+    string y = x;
+    reverse(y.begin(),y.end());
+
+    return x == y;
+}
+
+int minimumPartition(string s, int i,int j){
+
+    if(i >= j) return 0;
 
     if(dp[i][j] != -1) return dp[i][j];
-    
+
+    if(isPalindrome(s,i,j)){
+        dp[i][j] = 0;
+        return 0;
+    }
+
     int ans = INT_MAX;
-
-    
-
-
     for(int k=i;k<=j-1;k++){
-        int temp = solve(arr,i,k) + solve(arr,k+1,j) + arr[i-1]*arr[k]*arr[j];
+        int left ;
+        int right ;
+        if (dp[i][k] != -1)
+            left = dp[i][k];
+        else{
+            left = minimumPartition(s,i,k);
+            dp[i][k] = left;
+        }
+        if (dp[k+1][j] != -1)
+            right = dp[k+1][j];
+        else{
+            right = minimumPartition(s,k+1,j);
+            dp[k+1][j] = right;
+        }
+        int temp  = 1 + left + right;
         ans = min(ans,temp);
     }
 
@@ -69,9 +95,6 @@ int solve(vector<int> arr, int i,int j){
 }
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
 
     for(int i=0;i<1000;i++){
         for(int j=0;j<1000;j++){
@@ -79,13 +102,10 @@ int32_t main(){
         }
     }
 
-    vector<int> arr(n);
-    for(auto &x: arr){
-        cin >> x;
-    }
+    string s;
+    cin >> s;
 
-    cout << solve(arr,1,n-1);
-    
+    cout << minimumPartition(s,0,s.size()-1);
     
     return 0;
 }

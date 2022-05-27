@@ -16,12 +16,14 @@ using namespace std;
 #define dec(i,a,b) for(int i=a;i>=b;i--)
 #define each(x,target) for(auto &x:target)
 const int N = 1e6, MOD = 1e9+7;
+
 void printBinary(int n){
     for(int i=10;i>=0;i--){
         if((n>>i) & 1) cout << 1;
         else cout << 0;
     }cout << endl;
 }
+
 class node{
     public:
         int val;
@@ -33,27 +35,13 @@ class node{
         }
 };
 
+#define minHeapInt priority_queue<int,vector<int>,greater<int>>
+#define maxHeapInt priority_queue<int,vector<int>>
+#define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
+#define maxHeapPair priority_queue<pi,vector<pi>>
 
-node* reverse(node* &head){
-    
-
-    node* prevptr = NULL;
-    node* currptr = head;
-    node* nextptr;   
-
-    while (currptr != NULL)
-    {
-        nextptr = currptr->next;
-        currptr->next = prevptr;
-
-        prevptr = currptr;
-        currptr = nextptr;
-    }
-
-    return prevptr;
-    
-
-}
+vector<int> adj[N];
+vector<bool> visited(N,false);
 
 
 void insertAtTail(node* &head,int data){
@@ -86,34 +74,61 @@ void display(node* head){
     
 }
 
-node* reverseRec(node* &head){
+void makeCycle(node* &head,int pos){
+    node* temp = head;
+    node* startNode;
 
-    if(head == NULL || head->next == NULL){
-        return head;
+    int count = 1;
+
+    while (temp->next != NULL)
+    {
+        if(count == pos){
+            startNode = temp;
+        }
+
+        temp = temp->next;
+        count++;
     }
 
-    node* newHead = reverseRec(head->next);
-    head->next->next = head;
-    head->next = NULL;
-
-    return newHead;
-}
-
-int main(){
+    temp->next = startNode;
     
 
-    node* head = NULL;
+}
+
+
+bool detectCycle(node* root){
+
+    if(root == NULL or root->next == NULL)
+        return false;
+
+    set<node*> s;
+
+    while (root != NULL){
+        if(s.find(root) != s.end()) {
+            return true;
+        }
+        s.insert(root);
+        root = root->next;
+    }
+
+    return false;
+    
+
+}
+
+
+int32_t main(){
+     node* head = NULL;
     insertAtTail(head,1);
     insertAtTail(head,2);
     insertAtTail(head,3);
     insertAtTail(head,4);
+    insertAtTail(head,5);
+    insertAtTail(head,6);
 
-    display(head);
+    makeCycle(head,3);
 
-    // node* newhead = reverse(head);
-    node* newhead = reverseRec(head);
-
-    display(newhead);
+    cout << detectCycle(head) << endl;
     
     
     return 0;

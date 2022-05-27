@@ -64,11 +64,21 @@ int32_t main(){
         else 
             selectedIndex = v.size()/2;
 
-        int sum1 = 0;
-        for(int i=0;i<selectedIndex;i++)
-            sum1 += v[i];
+        long long ans = INT_MIN;
 
-        cout << (v.size()-selectedIndex) * v[selectedIndex] - sum1 << endl;
+        for(int j=0;j<n;j++){
+            long long temp = 0;
+            for(int i=0;i<n;i++){
+                if(v[i] >= v[j])
+                    ans += v[j];
+                else 
+                    ans -= v[i];
+            }
+
+            ans = max(ans,temp);
+        }
+
+        cout << ans << endl;
 
     }
     
