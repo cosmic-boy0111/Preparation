@@ -59,6 +59,8 @@ bool isPalindrome(string s,int i,int j){
     return x == y;
 }
 
+
+
 int minimumPartition(string s, int i,int j){
 
     if(i >= j) return 0;
@@ -105,7 +107,18 @@ int32_t main(){
     string s;
     cin >> s;
 
-    cout << minimumPartition(s,0,s.size()-1);
+    cout << minimumPartition(s,0,s.size()-1) << endl;
+
+    for(int i=0;i<s.size();i++){
+        for(int j=0;j<s.size();j++){
+            if( dp[i][j] == -1){
+                cout << 0 << " ";
+                continue;
+            }
+            cout << dp[i][j] << " ";
+        }cout << endl;
+    }
+
     
     return 0;
 }
