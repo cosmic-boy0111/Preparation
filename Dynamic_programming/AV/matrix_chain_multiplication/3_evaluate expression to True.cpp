@@ -46,6 +46,8 @@ vector<int> adj[N];
 
 vector<bool> visited(N,false);
 
+unordered_map<string,int> mp;
+
 int waysToEvaluateTrue(string s,int i,int j,bool isTrue){
 
     if(i > j) return false;
@@ -54,10 +56,21 @@ int waysToEvaluateTrue(string s,int i,int j,bool isTrue){
             return s[i] == 'T';
         else
             return s[i] == 'F';
+            
     }
+
+    string temp = to_string(i);
+    temp.push_back(' ');
+    temp.append(to_string(j));
+    temp.push_back(' ');
+    temp.append(to_string(isTrue));
+
+    if(mp.find(temp) != mp.end())
+        return mp[temp];
 
     int ans = 0;
     for(int k=i+1;k<j;k+=2){
+        
         int LT = waysToEvaluateTrue(s,i,k-1,true);
         int LF = waysToEvaluateTrue(s,i,k-1,false);
         int RT = waysToEvaluateTrue(s,k+1,j,true);
@@ -82,7 +95,7 @@ int waysToEvaluateTrue(string s,int i,int j,bool isTrue){
 
     }
 
-
+    mp[temp] = ans;
     return ans;
 
 

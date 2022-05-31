@@ -42,39 +42,40 @@ class node{
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
+vector<int> adj[N];
+vector<bool> visited(N,false);
 
+
+int maxProduct(vector<int>& nums) {
+
+    int ans = nums[0];
+    int mn = nums[0];
+    int mx = nums[0];
+
+    for(int i=1;i<nums.size();i++){
+        if(nums[i] < 0)
+            swap(mn,mx);
+        
+        mn = min(nums[i],mn*nums[i]);
+        mx = max(nums[i],nums[i]*mx);
+
+        ans = max(ans,mx);
+    }
+
+
+    return ans;
+    
+}
 
 int32_t main(){
     
-
     int n;
     cin >> n;
-    int w;
-    cin >> w;
+    vector<int> ans(n);
+    for(auto &x : ans)
+        cin >> x;
 
-    vector<pair<int,int>> v(n);
-    for(auto &x:v){
-        cin >> x.first >> x.second ;
-    }
-    
-    sort(v.begin(),v.end(),[&](pi p1,pi p2){
-        return p1.first/(p1.second*1.0) > p2.first/(p2.second*1.0);
-    });
+    cout << maxProduct(ans) << endl;
 
-    float ans = 0;
-    for(auto &x:v){
-        if(w >= x.second){
-            ans += x.first;
-            w -= x.second;
-            continue;
-        }
-
-        ans += (x.first/x.second) * w;
-        break;
-    }
-
-    cout << round(ans) << endl;
-    
-    
     return 0;
 }

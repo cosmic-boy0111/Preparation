@@ -42,38 +42,54 @@ class node{
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
+vector<int> adj[N];
+vector<bool> visited(N,false);
 
+
+int superEggDropHelper(int k, int n, vector<vector<int>> &dp)  {
+    if(k == 1) return n;
+    if(n == 0 || n == 1) return n;
+
+
+
+    if(dp[n][k] != -1) return dp[n][k];
+
+    int l = 1, r = n, ans = INT_MAX;
+
+    while (l <= r){
+        int mid = (l+r)/2;
+        int left = dp[mid-1][k-1] == -1 ?  superEggDropHelper(k-1, mid-1, dp) : dp[mid-1][k-1];
+        int right = dp[n-mid][k] == -1 ? superEggDropHelper(k,n-mid,dp) : dp[n-mid][k];
+
+        int temp = 1 + max(left,right);
+
+        if(left < right)
+            l = mid+1;
+        else
+            r = mid - 1 ;
+
+        ans = min(ans,temp);
+
+
+    }
+
+    dp[n][k] = ans;
+    return ans;
+    
+
+}
+
+int superEggDrop(int k,int n){
+    vector<vector<int>> dp(n+1,vector<int>(k+1,-1));
+    return superEggDropHelper(k,n,dp);
+}
 
 int32_t main(){
     
+    int e ,f;
+    cin >> e >> f;
 
-    int n;
-    cin >> n;
-    int w;
-    cin >> w;
-
-    vector<pair<int,int>> v(n);
-    for(auto &x:v){
-        cin >> x.first >> x.second ;
-    }
-    
-    sort(v.begin(),v.end(),[&](pi p1,pi p2){
-        return p1.first/(p1.second*1.0) > p2.first/(p2.second*1.0);
-    });
-
-    float ans = 0;
-    for(auto &x:v){
-        if(w >= x.second){
-            ans += x.first;
-            w -= x.second;
-            continue;
-        }
-
-        ans += (x.first/x.second) * w;
-        break;
-    }
-
-    cout << round(ans) << endl;
+    cout << superEggDrop(e,f) << endl;
     
     
     return 0;

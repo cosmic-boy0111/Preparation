@@ -27,13 +27,11 @@ void printBinary(int n){
 class node{
     public:
         int val;
-        node* left;
-        node* right;
+        node* next;
 
         node(int data = 0){
             val = data;
-            left = NULL;
-            right = NULL;
+            next = NULL;
         }
 };
 
@@ -42,38 +40,47 @@ class node{
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
+vector<int> adj[N];
+vector<bool> visited(N,false);
+
+
+void insertAtTail(node* &root, int val){
+    node* temp = root;
+    while (temp->next != NULL){
+        temp = temp->next;
+    }
+
+    temp->next = new node(val);
+}
+
+void display(node* root){
+    while (root != NULL){
+        cout << root->val << " ";
+        root = root->next;
+    }
+
+    cout << endl;
+    
+}
+
+void deleteNode(node *del){
+    del->val = del->next->val; 
+    del->next = del->next->next;
+    
+}
 
 
 int32_t main(){
     
+    node* root = new node(1);
+    insertAtTail(root,2);
+    insertAtTail(root,3);
+    insertAtTail(root,4);
+    insertAtTail(root,5);
 
-    int n;
-    cin >> n;
-    int w;
-    cin >> w;
-
-    vector<pair<int,int>> v(n);
-    for(auto &x:v){
-        cin >> x.first >> x.second ;
-    }
-    
-    sort(v.begin(),v.end(),[&](pi p1,pi p2){
-        return p1.first/(p1.second*1.0) > p2.first/(p2.second*1.0);
-    });
-
-    float ans = 0;
-    for(auto &x:v){
-        if(w >= x.second){
-            ans += x.first;
-            w -= x.second;
-            continue;
-        }
-
-        ans += (x.first/x.second) * w;
-        break;
-    }
-
-    cout << round(ans) << endl;
+    display(root);
+    deleteNode(root->next->next);
+    display(root);
     
     
     return 0;

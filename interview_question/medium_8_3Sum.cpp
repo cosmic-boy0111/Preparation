@@ -75,7 +75,7 @@ vector<vector<int>> threeSum(vector<int>& nums) {
         }
     }
 
-    map<vector<int>,int> vecMap;
+    map<string,int> vecMap;
 
     
 
@@ -83,10 +83,17 @@ vector<vector<int>> threeSum(vector<int>& nums) {
         int temp = -1 * pr.second;
         int idx = checkVal(temp,check);
         if(idx != -1){
-            if(pr.first.first != idx and pr.first.second != idx and used[idx] and vecMap[{ nums[ pr.first.first ] , nums [pr.first.second ] , nums [idx]}] == 0){
-                vector<int> tempVec = { nums[ pr.first.first ] , nums [pr.first.second ] , nums [idx]};
-                sort(tempVec.begin(),tempVec.end());
-                vecMap[tempVec] = 1;
+            vector<int> temp = {pr.first.first, pr.first.second,idx};
+            sort(temp.begin(),temp.end());
+            string s = "";
+            s.append(to_string(s[0]));
+            s.push_back(' ');
+            s.append(to_string(s[1]));
+            s.push_back(' ');
+            s.append(to_string(s[2]));
+            if(pr.first.first != idx and pr.first.second != idx and used[idx] and vecMap.find(s) == vecMap.end()){
+                
+                vecMap[s] = 1;
                 ans.push_back({ nums[ pr.first.first ] , nums [pr.first.second ] , nums [idx]});
                 used[idx] = 0;
             }

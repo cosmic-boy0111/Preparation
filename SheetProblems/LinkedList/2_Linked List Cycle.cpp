@@ -27,13 +27,11 @@ void printBinary(int n){
 class node{
     public:
         int val;
-        node* left;
-        node* right;
+        node* next;
 
         node(int data = 0){
             val = data;
-            left = NULL;
-            right = NULL;
+            next = NULL;
         }
 };
 
@@ -42,38 +40,36 @@ class node{
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
+vector<int> adj[N];
+vector<bool> visited(N,false);
 
+bool hasCycle(node* head){
+    unordered_set<node*> s;
+    if(head == NULL || head->next == NULL){
+        return true;
+    }
+
+    node *temp = head;
+
+    while (temp != NULL)
+    {
+        if(s.find(temp) != s.end())
+            return true;
+        s.insert(temp);
+        temp = temp->next;
+    }
+
+    return false;
+    
+}
 
 int32_t main(){
-    
-
-    int n;
-    cin >> n;
-    int w;
-    cin >> w;
-
-    vector<pair<int,int>> v(n);
-    for(auto &x:v){
-        cin >> x.first >> x.second ;
+    long long T;
+    cin >> T;
+    while(T--){
+        
     }
     
-    sort(v.begin(),v.end(),[&](pi p1,pi p2){
-        return p1.first/(p1.second*1.0) > p2.first/(p2.second*1.0);
-    });
-
-    float ans = 0;
-    for(auto &x:v){
-        if(w >= x.second){
-            ans += x.first;
-            w -= x.second;
-            continue;
-        }
-
-        ans += (x.first/x.second) * w;
-        break;
-    }
-
-    cout << round(ans) << endl;
     
     
     return 0;

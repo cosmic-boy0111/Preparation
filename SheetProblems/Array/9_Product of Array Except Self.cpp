@@ -42,39 +42,41 @@ class node{
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
+vector<int> adj[N];
+vector<bool> visited(N,false);
+
+vector<int> productExceptSelf(vector<int>& nums) {
+    vector<int> ans(nums.size(),1);
+    int forward = 1;
+    for(int i=0;i<nums.size()-1;i++){
+        forward = forward * nums[i];
+        ans[i+1] *= forward;
+    }
+
+    int backward = 1;
+    for(int i = nums.size()-1;i>0;i--){
+        backward = backward * nums[i];
+        ans[i-1] *= backward;
+    }
+
+    return ans;
+
+}
 
 
 int32_t main(){
     
-
     int n;
     cin >> n;
-    int w;
-    cin >> w;
 
-    vector<pair<int,int>> v(n);
-    for(auto &x:v){
-        cin >> x.first >> x.second ;
-    }
+    vector<int> nums(n);
+
+    for(auto &x : nums)
+        cin >> x;
+
     
-    sort(v.begin(),v.end(),[&](pi p1,pi p2){
-        return p1.first/(p1.second*1.0) > p2.first/(p2.second*1.0);
-    });
-
-    float ans = 0;
-    for(auto &x:v){
-        if(w >= x.second){
-            ans += x.first;
-            w -= x.second;
-            continue;
-        }
-
-        ans += (x.first/x.second) * w;
-        break;
-    }
-
-    cout << round(ans) << endl;
-    
+    for(auto &x : productExceptSelf(nums))
+        cout << x << " ";
     
     return 0;
 }

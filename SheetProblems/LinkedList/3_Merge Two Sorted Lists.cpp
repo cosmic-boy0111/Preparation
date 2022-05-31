@@ -27,13 +27,11 @@ void printBinary(int n){
 class node{
     public:
         int val;
-        node* left;
-        node* right;
+        node* next;
 
         node(int data = 0){
             val = data;
-            left = NULL;
-            right = NULL;
+            next = NULL;
         }
 };
 
@@ -42,39 +40,48 @@ class node{
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
+vector<int> adj[N];
+vector<bool> visited(N,false);
 
+void display(node* root){
+    while (root != NULL){
+        cout << root->val << " ";
+        root = root->next;
+    }
+    
+}
+
+node* mergeTwoLists(node* root1,node* root2){
+
+    if( !root1  or !root2){
+        return !root1 ? root2 : root1;
+    }
+
+
+    if(root1->val < root2->val){
+        root1->next = mergeTwoLists(root1->next,root2);
+        return root1;
+    }
+
+    root2->next = mergeTwoLists(root1,root2->next);
+    return root2;
+
+
+}
 
 int32_t main(){
-    
 
-    int n;
-    cin >> n;
-    int w;
-    cin >> w;
+    node* root1 = new node(1);
+    root1->next = new node(2);
+    root1->next->next = new node(4);
 
-    vector<pair<int,int>> v(n);
-    for(auto &x:v){
-        cin >> x.first >> x.second ;
-    }
-    
-    sort(v.begin(),v.end(),[&](pi p1,pi p2){
-        return p1.first/(p1.second*1.0) > p2.first/(p2.second*1.0);
-    });
+    node* root2 = new node(1);
+    root2->next = new node(3);
+    root2->next->next = new node(4);
 
-    float ans = 0;
-    for(auto &x:v){
-        if(w >= x.second){
-            ans += x.first;
-            w -= x.second;
-            continue;
-        }
 
-        ans += (x.first/x.second) * w;
-        break;
-    }
+    display(mergeTwoLists(root1,root2));
 
-    cout << round(ans) << endl;
-    
     
     return 0;
 }
