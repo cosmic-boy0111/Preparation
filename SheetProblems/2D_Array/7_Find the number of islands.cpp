@@ -78,59 +78,70 @@ void display(Node* root){
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
 vector<int> adj[N];
-vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
+bool isSafe(int i,int j,vector<vector<char>> & grid,
+vector<vector<int>>& visited){
+    return (i>=0) and (i<grid.size()) and (j>=0) and (j < grid[0].size()) and (grid[i][j] == '1') and visited[i][j];
+}
+
+void markVisited(int i,int j,vector<vector<char>> & grid,
+vector<vector<int>>& visited){
+    static int row[8] = {-1,-1,-1,0,1,1,1,0};
+    static int col[8] = {-1,0,1,1,1,0,-1,-1};
+
+    visited[i][j] = 0;
+
+    for(int k=0;k<8;k++){
+        if(isSafe(i+row[k],j+col[k],grid,visited))
+            markVisited(i+row[k],j+col[k],grid,visited);
+    }
+
+}
+
+int numIslands(vector<vector<char>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
+
+    vector<vector<int>> visited(n,vector<int>(m,1));
+
+    int ans = 0;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            
+            if(grid[i][j] == '1' and visited[i][j]){
+                markVisited(i,j,grid,visited);
+                ans++;
+
             }
-            ans1 = max(ans1,t);
-            temp = temp2;
+
         }
     }
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
+    // for(int i=0;i<n;i++){
+    //     for(int j=0;j<m;j++){
+    //         cout << visited[i][j] << " ";
+    //     }cout << endl;
+    // }
+
+
     
-    ans.push_back(temp);
 
     return ans;
+
 }
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    vector<vector<int>> v;
+    int n,m;
+    cin >> n >> m;
+    vector<vector<char>> mat(n,vector<char>(m));
     for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
+        for(int j=0;j<m;j++){
+            cin >> mat[i][j];
+        }
     }
 
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
-            cout << y << " ";
-        cout << endl;
-    }
-
+    cout << numIslands(mat);
     
     return 0;
 }

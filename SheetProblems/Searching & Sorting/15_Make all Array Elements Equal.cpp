@@ -80,57 +80,30 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-            temp = temp2;
-        }
+int makeEqual(vector<int> nums){
+    int n = nums.size();
+    int mid = n/2;
+    int temp;
+    if(n%2 == 1) temp = nums[mid];
+    else temp = (nums[mid]+nums[mid-1])/2;
+
+    int ans = 0;
+    for(auto &x : nums){
+        ans += abs(temp-x);
     }
-
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
-    
-    ans.push_back(temp);
-
     return ans;
-}
+} 
 
 int32_t main(){
     
     int n;
     cin >> n;
-    vector<vector<int>> v;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
-    }
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
 
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
-            cout << y << " ";
-        cout << endl;
-    }
-
+    cout << makeEqual(v);
+    
     
     return 0;
 }

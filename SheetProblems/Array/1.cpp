@@ -80,57 +80,66 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-            temp = temp2;
+bool isPrime(int n)
+{
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            return false;
         }
     }
+    return true;
+}
+  
+int printMinCountPrime(int N)
+{
+  
+    int minCount;
+  
+    if (isPrime(N)) {
+        minCount = 1;
+    }
+  
+    else if (N % 2 == 0) {
+        minCount = 2;
+    }
+  
+    else {
+  
+        if (isPrime(N - 2)) {
+            minCount = 2;
+        }
+  
+        else {
+            minCount = 3;
+        }
+    }
+    return minCount;
+}
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
-    
-    ans.push_back(temp);
-
-    return ans;
+int getsum(int n){
+    int sum = 0;
+    for(int i=1;i<=n;i++){ 
+        if(n%i==0){
+            sum=sum+i;
+        }
+    }
+    return sum;
 }
 
 int32_t main(){
     
+
     int n;
     cin >> n;
-    vector<vector<int>> v;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
-    }
+    int X = printMinCountPrime(n);
+    int y = getsum(n);
+    cout << ((4^2)+7) << endl;
+    cout << X << " " << y << endl;
+    cout << (n xor X + y) << endl;
 
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
-            cout << y << " ";
-        cout << endl;
-    }
-
+    
+    
+    
     
     return 0;
 }

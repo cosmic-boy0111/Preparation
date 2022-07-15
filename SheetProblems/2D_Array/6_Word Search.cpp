@@ -79,58 +79,53 @@ void display(Node* root){
 
 vector<int> adj[N];
 vector<bool> visited(N,false);
+int rows;
+int cols;
+bool isFound(vector<vector<char> > &board, const char* curChar, int curRow, int curCol)
+{
+    if(curRow<0 || curCol<0 || curRow>=rows || curCol>=cols || board[curRow][curCol]=='\0' || *curChar!=board[curRow][curCol])
+        return false;
+    if(*(curChar+1)=='\0')
+        return true;
+    char t=board[curRow][curCol];
+    board[curRow][curCol]='\0';
+    
+    if(isFound(board, curChar+1, curRow-1, curCol) || isFound(board, curChar+1, curRow+1, curCol) || isFound(board, curChar+1, curRow, curCol-1) || isFound(board, curChar+1, curRow, curCol+1))
+        return true; 
+    
+    board[curRow][curCol] = t;
+    return false;
+}
+    bool exist(vector<vector<char>> &board, string word) {
+        rows = board.size();
+        cols = board[0].size();
+    for(int curRow = 0; curRow < rows; ++curRow)
+    {
+        for(int curCol = 0; curCol < cols; ++curCol)
+        {
+            if(isFound(board, word.c_str(), curRow, curCol))
+                return true;
+        }
+    }
+    return false;
+}
+int32_t main(){
+    
+    int n,m;
+    cin >> n >> m;
+    vector<vector<char>> mat(n,vector<char>(m));
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-            temp = temp2;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            cin >> mat[i][j];
         }
     }
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
+    string s;
+    cin >> s;
+
+    cout << exist(mat,s) ;
     
-    ans.push_back(temp);
-
-    return ans;
-}
-
-int32_t main(){
-    
-    int n;
-    cin >> n;
-    vector<vector<int>> v;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
-    }
-
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
-            cout << y << " ";
-        cout << endl;
-    }
-
     
     return 0;
 }

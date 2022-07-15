@@ -80,57 +80,52 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
+string longestPalindrome(string s) {
+    int n = s.size();
+    bool dp[n][n];
+
+    pair<int,int> ans;
+
+    for(int g=0;g<n;g++){
+        for(int i=0, j=g; j < n ; i++,j++){
+            if(g==0){
+                dp[i][j] = true;
+            }else if(g==1){
+                if(s[i] == s[j]){
+                    dp[i][j] = true;
+                }else{
+                    dp[i][j] = false;
+                }
+            }else{
+                if(s[i] == s[j] and dp[i+1][j-1]){
+                    dp[i][j] = true;
+                }else{
+                    dp[i][j] = false;
+                }
             }
-            ans1 = max(ans1,t);
-            temp = temp2;
+            if(dp[i][j]){
+                ans.first = i;
+                ans.second = j;
+            }
         }
     }
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
-    
-    ans.push_back(temp);
+    string temp = "";
+    for(int i=ans.first;i<=ans.second;i++){
+        temp.push_back(s[i]);
+    }
 
-    return ans;
+    return temp;
+    
 }
+
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    vector<vector<int>> v;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
-    }
+    string s;
+    cin >> s;
 
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
-            cout << y << " ";
-        cout << endl;
-    }
-
+    cout << longestPalindrome(s) << endl;
     
     return 0;
 }

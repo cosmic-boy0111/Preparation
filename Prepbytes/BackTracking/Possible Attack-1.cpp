@@ -16,12 +16,14 @@ using namespace std;
 #define dec(i,a,b) for(int i=a;i>=b;i--)
 #define each(x,target) for(auto &x:target)
 const int N = 1e6, MOD = 1e9+7;
+
 void printBinary(int n){
     for(int i=10;i>=0;i--){
         if((n>>i) & 1) cout << 1;
         else cout << 0;
     }cout << endl;
 }
+
 class node{
     public:
         int val;
@@ -35,38 +37,53 @@ class node{
         }
 };
 
-vector<vector<int>> ans;
+class Node{
+    public:
+        int val;
+        Node* next;
 
-void permute(vector<int> &a,int idx){
-    if(idx == a.size()){
-        ans.push_back(a);
+        Node(int data = 0){
+            val = data;
+            next = NULL;
+        }
+};
+
+void insertAtTail(Node* &root,int val){
+    if(root == NULL){
+        root = new Node(val);
+        return;
+    }
+    Node* temp = root;
+    while (temp->next != NULL){
+        temp = temp->next;
     }
 
-    for(int i=idx; i<a.size(); i++){
-        swap(a[i],a[idx]);
-        permute(a,idx+1);
-        swap(a[i],a[idx]);
-    }
+    temp->next = new Node(val); 
 }
 
-int main(){
-    
-
-    int n;
-    cin >> n;
-
-    vector<int> a(n);
-    inc(i,0,n){
-        cin >> a[i];
+void display(Node* root){
+    while (root != NULL){
+        cout << root->val << " ";
+        root = root->next;
     }
 
-    permute(a,0);
+    cout << endl;
 
-    for(auto x:ans){
-        for(auto y:x){
-            cout << y << " ";
-        }cout << endl;
-    }
+}
+
+
+#define minHeapInt priority_queue<int,vector<int>,greater<int>>
+#define maxHeapInt priority_queue<int,vector<int>>
+#define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
+#define maxHeapPair priority_queue<pi,vector<pi>>
+
+vector<int> adj[N];
+vector<bool> visited(N,false);
+
+void possibleAttack
+
+
+int32_t main(){
     
     
     return 0;

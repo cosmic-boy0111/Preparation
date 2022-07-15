@@ -41,23 +41,20 @@ int main(){
    
     string s;
     cin >> s;
-    int start = 0;
-    int ans = 0;
-    unordered_map<char,int> mp;
-    for(int i=0;i<s.size();i++){
+    int longest=0;
+        int l=0;
+        int r=0;
+        unordered_map<char,int> m;
 
-        if(mp.find(s[i]) != mp.end()){
-            start = mp[s[i]]+1;
-            mp[s[i]] = i;
-        }else{
-            mp[s[i]] = i;
+        while(r<s.length()){     
+            m[s[r]]+=1;
+            while(m[s[r]]> 1){      
+                m[s[l]]--;               
+                l++;
+            }
+            longest=max(longest, r-l+1);
+            r++;
         }
-
-        ans = max(ans,i-start+1);
-        
-    }
-
-    cout << ans << endl;
-    
+    cout << longest << endl;
     return 0;
 }

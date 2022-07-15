@@ -80,57 +80,38 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-            temp = temp2;
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+    vector<vector<string>> ans;
+    unordered_map<string,int> mp;
+    int cnt = 0;
+    for(int i=0;i<strs.size();i++){
+        string temp = strs[i];
+        sort(temp.begin(),temp.end());
+        if(mp.find(temp) != mp.end()){
+            ans[mp[temp]].push_back(strs[i]);
+            continue;
         }
-    }
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
-    
-    ans.push_back(temp);
+        vector<string> row;
+        row.push_back(strs[i]);
+        mp[temp] = cnt; 
+        cnt++;
+        ans.push_back(row);
+        
+    }
 
     return ans;
 }
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    vector<vector<int>> v;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
-    }
-
-    for(auto &x : overlappedInterval(v)){
+    vector<string> v = {"eat","tea","tan","ate","nat","bat"};
+    for(auto & x : groupAnagrams(v)){
         for(auto & y : x)
             cout << y << " ";
         cout << endl;
     }
-
+    
     
     return 0;
 }

@@ -80,57 +80,44 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-            temp = temp2;
+void rotate(vector<vector<int>>& matrix) {
+    int n = matrix.size();
+    if(n == 1) return;
+    for(int i=0;i<n;i++){
+        for(int j=i+1;j<n;j++){
+            swap(matrix[i][j],matrix[j][i]);
         }
     }
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
-    
-    ans.push_back(temp);
+    int mid = n/2;
+    for(int k = 0; k<mid;k++){
+        for(int i=0;i<n;i++){
+            swap(matrix[i][k],matrix[i][n-k-1]);
+        }
+    }
 
-    return ans;
 }
 
 int32_t main(){
     
     int n;
     cin >> n;
-    vector<vector<int>> v;
+    vector<vector<int>> mat(n,vector<int> (n));
+
     for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
+        for(int j=0;j<n;j++){
+            cin >> mat[i][j];
+        }
     }
 
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
-            cout << y << " ";
-        cout << endl;
-    }
+    rotate(mat);
 
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cout << mat[i][j] << " ";
+        }cout << endl;
+    }
+    
     
     return 0;
 }

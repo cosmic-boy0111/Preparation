@@ -80,57 +80,49 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<vector<int>> overlappedInterval(vector<vector<int>>& intervals) {
-    vector<vector<int>> ans;
-    vector<int> arr = {11,2,3,5};
-    // vector<int> arr = {25,34,23,45,16,51,29,38,47};
-    int ans1 = -1;
-    sort(intervals.begin(),intervals.end());
-    vector<int> temp = intervals[0];
-    for(int i=1;i<intervals.size();i++){
-        vector<int> temp2 = intervals[i];
-        if(temp2[0]>=temp[0] and temp2[0] <= temp[1]){
-            temp = {min(temp[0],temp2[0]),max(temp[1],temp2[1])};
-        }else{
-            ans.push_back(temp);
-            int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
+vector<vector<int>> fourSum(vector<int>& nums, int target) {
+    
+    set<vector<int>> ans;
+    sort(nums.begin(), nums.end());
+    int n = nums.size();
+    for(int i=0;i<n-3;i++){
+        for(int j = i+1;j<n-2;j++){
+            long long sum = (nums[i] + nums[j])%1000000009;
+            int l = j+1;
+            int r = n-1;
+            while (l < r){
+                long long val = (((sum + nums[l])%1000000009) + nums[r])%1000000009;
+                if(val == target) ans.insert({nums[i],nums[j],nums[l],nums[r]});
+                if(val < target) l++;
+                else r--;
             }
-            ans1 = max(ans1,t);
-            temp = temp2;
         }
     }
 
-     int t = 0;
-            for(int j=temp[0]-1;j<temp[1];j++){
-                t += arr[j];
-            }
-            ans1 = max(ans1,t);
-    cout << ans1 << endl;
-    
-    ans.push_back(temp);
+    vector<vector<int>> result;
+    for(auto &x : ans)
+        result.push_back(x);
 
-    return ans;
+    return result;
+
+
 }
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    vector<vector<int>> v;
-    for(int i=0;i<n;i++){
-        int x,y;
-        cin >> x >> y;
-        v.push_back({x,y});
-    }
+    int n , k;
+    cin >> n >> k;
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
 
-    for(auto &x : overlappedInterval(v)){
-        for(auto & y : x)
+    for(auto &x : fourSum(v,k)){
+        for(auto &y : x)
             cout << y << " ";
         cout << endl;
     }
-
+    
+    
     
     return 0;
 }
