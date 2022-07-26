@@ -80,55 +80,35 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
-
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
+int minSwaps(vector<int>&nums){
+    unordered_map<int,int> mp;
     int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+    for(int i=0;i<n;i++) mp[nums[i]] = i;
+    vector<int> temp = nums;
+    sort(temp.begin(),temp.end());
+    int ans = 0;
+    for(int i=0;i<n;i++){
+        if(temp[i] == nums[i]) continue;
+        ans++;
+        nums[mp[temp[i]]] = nums[i];
+        nums[i] = temp[i];
+        mp[nums[mp[temp[i]]]] = mp[temp[i]];
+        mp[nums[i]] = i;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
+
+    cout << minSwaps(v);
     
     
     return 0;
 }
-
-

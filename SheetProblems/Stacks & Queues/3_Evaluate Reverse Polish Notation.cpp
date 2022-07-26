@@ -26,42 +26,42 @@ void printBinary(int n){
 
 class node{
     public:
-        int val;
+        int data;
         node* left;
         node* right;
 
-        node(int data = 0){
-            val = data;
+        node(int val = 0){
+            data = val;
             left = NULL;
             right = NULL;
         }
 };
 
-class Node{
+class ListNode{
     public:
         int val;
-        Node* next;
+        ListNode* next;
 
-        Node(int data = 0){
+        ListNode(int data = 0){
             val = data;
             next = NULL;
         }
 };
 
-void insertAtTail(Node* &root,int val){
+void insertAtTail(ListNode* &root,int val){
     if(root == NULL){
-        root = new Node(val);
+        root = new ListNode(val);
         return;
     }
-    Node* temp = root;
+    ListNode* temp = root;
     while (temp->next != NULL){
         temp = temp->next;
     }
 
-    temp->next = new Node(val); 
+    temp->next = new ListNode(val); 
 }
 
-void display(Node* root){
+void display(ListNode* root){
     while (root != NULL){
         cout << root->val << " ";
         root = root->next;
@@ -80,55 +80,36 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+
+int evalRPN(vector<string>& tokens) {
+    stack<int> st;  
+    for(auto &x : tokens){
+        if(x=="+" || x=="-" || x=="*" || x=="/"){
+            int top2 = st.top();
+            st.pop();
+            int top1 = st.top();
+            st.pop();
+            if(x=="+") st.push(top1+top2);
+            else if(x=="-") st.push(top1-top2);
+            else if(x=="*") st.push(top1*top2);
+            else st.push(top1/top2);
+            continue;
         }
+        st.push(stoi(x));
     }
-
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    return st.top();
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n;
+    cin >> n;
+    vector<string> v(n);
+    for(auto & x : v)
+        cin >> x;
+
+    cout << evalRPN(v);
     
     
     return 0;
 }
-
-

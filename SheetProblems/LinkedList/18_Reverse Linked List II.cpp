@@ -80,55 +80,58 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
 
-    return false;
+Node* reverseList(Node* head) {
+    if (head == NULL or head -> next == NULL) {
+        return head;
+    }
+    Node* temp = reverseList(head -> next);
+    head -> next -> next = head;
+    head -> next = NULL;
+    return temp;
 }
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
+Node* reverseBetween(Node* head, int left, int right) {
+    int count = 0;
+    Node *temp = new Node(0);
+    Node *leftNode = temp;
+    Node *rightNode = head;
+    while(count <= right) {
+        if(count == left - 1) {
+            leftNode = temp;
         }
+        if(count == right) {
+            rightNode = temp -> next;
+            temp -> next = NULL;
+        }
+        count++;
+        temp = temp -> next;
     }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    leftNode -> next = reverseList(leftNode -> next);
+    if(left == 1) {
+        head = leftNode -> next;
+    }
+    temp = leftNode -> next;
+    while(temp && temp -> next) {
+        temp = temp -> next;
+    }
+    temp -> next = rightNode;
+    return head;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    Node* root = NULL;
+    int n;
+    cin >> n;
+    for(int i=0;i<n;i++){
+        int x;
+        cin >> x;
+        insertAtTail(root,x);
+    }
+
+    display(root);
+    display(reverseBetween(root,2,4));
     
     
     return 0;
 }
-
-

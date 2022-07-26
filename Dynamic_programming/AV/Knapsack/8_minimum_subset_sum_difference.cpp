@@ -45,10 +45,8 @@ class node{
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-const int t = 1e3+10;
-int dp[t][t];
 
-bool isSubset(int arr[],int n,int sum){
+bool isSubset(int arr[],int n,int sum,vector<vector<int>>& dp){
     if(sum ==0 )
         return true;
 
@@ -59,39 +57,41 @@ bool isSubset(int arr[],int n,int sum){
         return dp[n][sum];
 
     if(arr[n-1] <= sum)
-        return dp[n][sum] = isSubset(arr,n-1,sum-arr[n-1]) || isSubset(arr,n-1,sum);
+        return dp[n][sum] = isSubset(arr,n-1,sum-arr[n-1],dp) || isSubset(arr,n-1,sum,dp);
 
-    return dp[n][sum] = isSubset(arr,n-1,sum);
+    return dp[n][sum] = isSubset(arr,n-1,sum,dp);
     
 }
 
 
 int32_t main(){
 
-    inc(i,0,t){
-        inc(j,0,t)
-            dp[i][j] = -1;
-    }
 
     int n;
     cin >> n;
     int arr[n];
     int sum = 0;
 
+    
+
     for(int i=0;i<n;i++){
         cin >> arr[i];
         sum += arr[i];
     }
 
+    vector<vector<int>> dp(n+1,vector<int>(sum+1,-1));
+
     vector<int> ansArray;
     for(int i=0;i<=sum;i++){
-        if(isSubset(arr,n,i)){
+        if(isSubset(arr,n,i,dp)){
             ansArray.push_back(i);
         }
     }
 
     int ans = INT_MAX;
-
+    for(auto & x : ansArray)
+        cout << x << " ";
+    cout << endl;
     for(int i=0;i<ansArray.size()/2;i++){
         ans = min(ans,sum-2*ansArray[i]);
     }

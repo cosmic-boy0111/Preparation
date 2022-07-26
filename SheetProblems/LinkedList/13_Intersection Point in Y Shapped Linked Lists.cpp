@@ -80,55 +80,68 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
+
+int length(Node* head){
+    int l = 0;
+    Node* temp = head;
+    while (temp){
+        temp = temp->next;
+        l++;
     }
 
-    return false;
+    return l;
+    
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+
+
+int intersectPoint(Node* head1,Node* head2){
+
+    int l1 = length(head1);
+    int l2 = length(head2);
+
+    int d = 0;
+    Node* ptr1;
+    Node* ptr2;
+
+    if(l1 > l2){
+        d = l1-l2;
+        ptr1 = head1;
+        ptr2 = head2;
+    }else{
+        d = l2-l1;
+        ptr1 = head2;
+        ptr2 = head1;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+    while (d)
+    {
+        ptr1 = ptr1->next;
+        if(ptr1 == NULL)
+            return -1;
+        d--;
+    }
+
+    while (ptr1 != NULL and ptr2 != NULL)
+    {
+        if(ptr1 == ptr2){
+            return ptr1->val;
+        }
+        ptr1 = ptr1->next;
+        ptr2 = ptr2->next;
+
+    }
+
+    return -1;
+    
     
 
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+
     
     
     return 0;
 }
-
-

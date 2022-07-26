@@ -26,42 +26,42 @@ void printBinary(int n){
 
 class node{
     public:
-        int val;
+        int data;
         node* left;
         node* right;
 
-        node(int data = 0){
-            val = data;
+        node(int val = 0){
+            data = val;
             left = NULL;
             right = NULL;
         }
 };
 
-class Node{
+class ListNode{
     public:
         int val;
-        Node* next;
+        ListNode* next;
 
-        Node(int data = 0){
+        ListNode(int data = 0){
             val = data;
             next = NULL;
         }
 };
 
-void insertAtTail(Node* &root,int val){
+void insertAtTail(ListNode* &root,int val){
     if(root == NULL){
-        root = new Node(val);
+        root = new ListNode(val);
         return;
     }
-    Node* temp = root;
+    ListNode* temp = root;
     while (temp->next != NULL){
         temp = temp->next;
     }
 
-    temp->next = new Node(val); 
+    temp->next = new ListNode(val); 
 }
 
-void display(Node* root){
+void display(ListNode* root){
     while (root != NULL){
         cout << root->val << " ";
         root = root->next;
@@ -80,55 +80,45 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
-
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
+ListNode* divide(int N, ListNode *head){
+    if(head == NULL or head->next == NULL) return head;
+    ListNode* even = new ListNode(-1);
+    ListNode* odd = new ListNode(-1);
+    ListNode* evenTail = even;
+    ListNode* oddTail = odd;
+    while (head){
+        if(head->val % 2 == 0){
+            evenTail->next = head;
+            evenTail = evenTail->next;
         }else{
-            r = mid-1;
+            oddTail->next = head;
+            oddTail = oddTail->next;
         }
+        head = head->next;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+    oddTail->next = NULL;
+    evenTail->next = odd->next;
+    return even->next;
     
-
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
+    
+    
+    ListNode* root = NULL;
+    int n;
+    cin >> n;   
+
+    for(int i=0;i<n;i++){
+        int x;
+        cin >> x;
+        insertAtTail(root,x);
     }
-    
-    
+
+    display(root);
+    display(divide(n,root));
+
     
     return 0;
 }
-
-

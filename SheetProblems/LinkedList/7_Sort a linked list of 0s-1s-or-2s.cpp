@@ -80,55 +80,44 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
+Node* segregate(Node *head) {
+    unordered_map<int,int> mp;
+    Node* temp = head;
+    while (temp != NULL){
+        mp[temp->val] ++;
+        temp = temp->next;
     }
 
-    return false;
-}
+    int i = 0;
+    temp = head;
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
+    while (temp != NULL){
+        if(mp[i] == 0) i++;
+        else{
+            temp->val = i;
+            mp[i]--;
+            temp = temp->next;
         }
     }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
     
-
+    return head;
+    
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    Node* root = NULL;
+    int n;
+    cin >> n;
+    for(int i=0;i<n;i++){
+        int x;
+        cin >> x;
+        insertAtTail(root,x);
+    }
+
+    display(root);
+    display(segregate(root));
     
     
     return 0;
 }
-
-

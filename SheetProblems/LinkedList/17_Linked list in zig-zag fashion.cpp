@@ -80,55 +80,61 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
+Node* zigZag(Node* head){
 
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
+    if(head == NULL || head->next == NULL) return head;
+    bool inc = true;
+    Node* prev = head;
+    Node* curr = head->next;
+    Node* next = head->next->next;
+    while (curr != NULL){
+        if(inc){
+            if(prev->val > curr->val){
+                int temp = curr->val;
+                curr->val = prev->val;
+                prev->val = temp;
+            }
+            if( next != NULL and next->val > curr->val){
+                int temp = next->val;
+                next->val = curr->val;
+                curr->val = temp;
+            }
         }else{
-            r = mid-1;
+            if(prev->val < curr->val){
+                int temp = curr->val;
+                curr->val = prev->val;
+                prev->val = temp;
+            }
+            if( next != NULL and next->val < curr->val){
+                int temp = next->val;
+                next->val = curr->val;
+                curr->val = temp;
+            }
         }
+        inc = !inc;
+        prev = prev->next;
+        curr = curr->next;
+        next = next->next;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    return head;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
+    
+    Node* root = NULL;
+    int n;
+    cin >> n;
+    for(int i=0;i<n;i++){
+        int x;
+        cin >> x;
+        insertAtTail(root,x);
     }
+
+    display(root);
+    display(zigZag(root));
     
     
     
     return 0;
 }
-
-

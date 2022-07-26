@@ -78,57 +78,64 @@ void display(Node* root){
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
 vector<int> adj[N];
-vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
+vector<string> paths;
+unordered_map<char,pair<int,int>> mp;
+vector<vector<int>> visited;
 
-    return false;
+bool isSafe(vector<vector<int>> &m,int n,int i,int j){
+    return (i>=0) and (i<n) and (j>=0) and (j<n) and (m[i][j] == 1) and visited[i][j];
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+void ratMaze(vector<vector<int>> &m,int n,int i,int j,string ans){
+    if(i  == n-1 and j == n-1){
+        if(ans.size() != 0)
+            paths.push_back(ans);
+        return;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
     
+    if(isSafe(m,n,i,j)){
+        visited[i][j] = 0;
+        for(auto &x : mp){
+            if(isSafe(m,n,i+x.second.first,j+x.second.second)){
+                ans.push_back(x.first);
+                ratMaze(m,n,i+x.second.first,j+x.second.second,ans);
+                ans.pop_back();
+            }
+        }
+        visited[i][j] = 1;
+    }
+    return;
+}
 
+vector<string> findPath(vector<vector<int>> &m, int n) {
+    vector<string> temp = {"-1"};
+    mp['U'] = {-1,0};
+    mp['R'] = {0,1};
+    mp['D'] = {1,0};
+    mp['L'] = {0,-1};
+    for(int i=0;i<=n;i++){
+        vector<int> temp(n+1,1);
+        visited.push_back(temp);
+    }
+    ratMaze(m,n,0,0,"");
+    return paths.size() == 0 ? temp : paths;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n;
+    cin >> n;
+    vector<vector<int>> maze(n,vector<int>(n));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            cin >> maze[i][j];
+        }
+    }
+    for(auto &x : findPath(maze,n))
+        cout << x << endl;
     
     
     return 0;
 }
-
-

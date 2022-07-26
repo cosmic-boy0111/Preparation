@@ -15,7 +15,6 @@ using namespace std;
 #define inc(i,a,b) for(int i=a;i<b;i++)
 #define dec(i,a,b) for(int i=a;i>=b;i--)
 #define each(x,target) for(auto &x:target)
-const int N = 1e6, MOD = 1e9+7;
 
 void printBinary(int n){
     for(int i=10;i>=0;i--){
@@ -77,58 +76,40 @@ void display(Node* root){
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
-vector<int> adj[N];
-vector<bool> visited(N,false);
+int mod = 1e9+7;
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
-
-    return false;
+long func(int i, int j, int hops, vector<vector<vector<long>>> &dp){
+    if(i<0 || i>=4 || j<0 || j>=3 || (i==3 && j!=1))  return 0;
+    if(hops == 1)   return 1;
+    
+    if(dp[i][j][hops] != -1)
+        return dp[i][j][hops];
+    
+    dp[i][j][hops] = func(i-2, j-1, hops-1, dp)%mod+func(i-2, j+1, hops-1, dp)%mod+
+                    func(i-1, j-2, hops-1, dp)%mod+func(i+1, j-2, hops-1, dp)%mod+
+                    func(i-1, j+2, hops-1, dp)%mod+func(i+1, j+2, hops-1, dp)%mod+
+                    func(i+2, j-1, hops-1, dp)%mod+func(i+2, j+1, hops-1, dp)%mod;
+    
+    return dp[i][j][hops];
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+int knightDialer(int n) {
+    vector<vector<vector<long>>> dp (4, vector<vector<long>> (3, vector<long> (n+1, -1)));
+    long ans=0;
+    for(int i=0; i<4; i++)
+        for(int j=0; j<3; j++)
+            ans = (ans+func(i, j, n, dp))%mod;
     
-
+    return (int)ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n;
+    cin >> n;
+
+    cout << knightDialer(n);
     
     
     return 0;
 }
-
-

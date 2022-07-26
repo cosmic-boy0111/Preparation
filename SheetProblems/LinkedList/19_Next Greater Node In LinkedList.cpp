@@ -26,12 +26,12 @@ void printBinary(int n){
 
 class node{
     public:
-        int val;
+        int data;
         node* left;
         node* right;
 
-        node(int data = 0){
-            val = data;
+        node(int val = 0){
+            data = val;
             left = NULL;
             right = NULL;
         }
@@ -39,11 +39,11 @@ class node{
 
 class Node{
     public:
-        int val;
+        int data;
         Node* next;
 
-        Node(int data = 0){
-            val = data;
+        Node(int val = 0){
+            data = val;
             next = NULL;
         }
 };
@@ -63,7 +63,7 @@ void insertAtTail(Node* &root,int val){
 
 void display(Node* root){
     while (root != NULL){
-        cout << root->val << " ";
+        cout << root->data << " ";
         root = root->next;
     }
 
@@ -79,56 +79,52 @@ void display(Node* root){
 
 vector<int> adj[N];
 vector<bool> visited(N,false);
-
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
+stack<int> st;
+void solve(vector<int> &ans,Node* head){
+    if(head->next == NULL){
+        st.push(head->data);
+        ans.push_back(0);
+        return;
+    }
+    solve(ans,head->next);
+    while (!st.empty() and st.top() <= head->data){
+        st.pop();
     }
 
-    return false;
+    if(st.empty()){
+        ans.push_back(0);
+    }else{
+        ans.push_back(st.top());
+    }
+
+    st.push(head->data);
+    
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+vector<int> nextLargerNodes(Node* head) {
+    vector<int> ans;
+    solve(ans,head);
+    reverse(ans.begin(),ans.end());
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    Node* root = NULL;
+    int n;
+    cin >> n;
+    for(int i=0;i<n;i++){
+        int x;
+        cin >> x;
+        insertAtTail(root,x);
+    }
+
+    for(auto &x : nextLargerNodes(root)){
+        cout << x << " ";
+    }
+
+
     
     
     return 0;
 }
-
-

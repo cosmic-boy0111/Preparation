@@ -110,8 +110,8 @@ int intersection(node* &head1,node* &head2){
         ptr2 = head2;
     }else{
         d = l2-l1;
-        ptr1 = head1;
-        ptr2 = head2;
+        ptr1 = head2;
+        ptr2 = head1;
     }
 
     while (d)
@@ -155,6 +155,7 @@ int main(){
 
     insertAtTail(head2,9);
     insertAtTail(head2,10);
+    insertAtTail(head2,11);
 
     intersect(head1,head2,3);
     display(head1);

@@ -80,55 +80,46 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
+vector<vector<string>> ans;
 
-    return false;
+bool isPalindrome(string s){
+    for(int i=0;i<s.size()/2;i++){
+        if(s[i] != s[s.size()-i-1]) return false;
+    }
+    return true;
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
+void solve(string s,int n,vector<string> temp){
+    for(int i=1;i<=n;i++){
+        string t = s.substr(0,i);
+        if(isPalindrome(t)){
+            temp.push_back(t);
+            if(i==n){
+                ans.push_back(temp);
+                return;
+            }
+            solve(s.substr(i),n-i,temp);
+            temp.pop_back();
         }
+
     }
+}
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+vector<vector<string>> partition(string s) {
+    solve(s,s.size(),{});
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
+    
+    
+    string s;
+    cin >> s;
+    for(auto &x : partition(s)){
+        for(auto &y : x)
+            cout << y << " ";
+        cout << endl;
     }
-    
-    
     
     return 0;
 }
-
-

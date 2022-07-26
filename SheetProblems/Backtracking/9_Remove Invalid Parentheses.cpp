@@ -80,55 +80,53 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+int invalid(string s){
+    stack<char> st;
+    for(auto &x : s){
+        if(x == '(')
+            st.push(x);
+        else if(x==')'){
+            if(!st.empty() and st.top()=='(')
+                st.pop();
+            else
+                st.push(')');
         }
     }
 
-    return false;
+    return st.size();
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+vector<string> ans;
+unordered_map<string,int> mp;
+void solve(string s, int x){
+    if(mp[s] != 0) return;
+    else mp[s]++;
+    if(x < 0) return;
+    if(x==0){
+        if(!invalid(s))
+            ans.push_back(s);
+        return;
     }
+    for(int i=0;i<s.size();i++){
+        string left = s.substr(0,i);
+        string right = s.substr(i+1);
+        solve(left+right,x-1);
+    }
+    return;
+}
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+vector<string> removeInvalidParentheses(string s) {
+    solve(s,invalid(s));
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    string s;
+    cin >> s;
+    for(auto &x : removeInvalidParentheses(s))
+        cout << x << " ";
     
     
     return 0;
 }
-
-

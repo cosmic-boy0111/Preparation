@@ -69,10 +69,20 @@ bool isSafe(int** arr,int x,int y,int n){
 
 }
 
-
+vector<vector<string>> ans;
 bool nQueen(int** arr,int x,int n){
     if(x >= n){
-        return true;
+        vector<string> st;
+        for (int i=0; i<n; i++){ 
+            string s = "";
+            for(int j=0;j<n;j++){
+                if(arr[i][j] == 0) s.push_back('.');
+                else s.push_back('Q');
+            }
+            st.push_back(s);
+        }
+        ans.push_back(st);
+        // return true;
     }
 
     for(int col=0;col<n;col++){
@@ -103,14 +113,13 @@ int main(){
         }
     }
 
-    
+    bool t = nQueen(arr,0,n);
 
-    if(nQueen(arr,0,n)){
-        for (int i=0; i<n; i++){ 
-            for(int j=0;j<n;j++){
-                cout << arr[i][j] << " ";
-            }cout << endl;
-        }
+    
+    for(auto &x : ans){
+        for(auto &y : x)
+            cout << y << " ";
+        cout << endl;
     }
     
     

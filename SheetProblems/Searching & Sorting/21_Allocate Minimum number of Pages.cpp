@@ -80,55 +80,59 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+
+
+bool isFeasible(int boards[],int n,int m,int mid){
+    int painters = 1;
+    int sum = 0;
+
+    for(int i=0;i<n;i++){
+        sum += boards[i];
+        if(sum > mid){
+            painters++;
+            if(painters > m)
+                return false;
+            sum = boards[i];
         }
     }
 
-    return false;
+    return true;
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
+int findPages(int boards[],int n,int m){
+    int totalLength = 0, k = 0;
+    for(int i=0;i<n;i++){
+        k = max(k, boards[i]);
+        totalLength += boards[i];
+    }
+
+    int ans = -1;
+
+    int lo = k , hi = totalLength;
+    while (lo <= hi){
+        int mid = lo + (hi - lo)/2;
+        if(isFeasible(boards,n,m,mid)){
+            ans = mid;
+            hi = mid-1;
         }else{
-            r = mid-1;
+            lo = mid + 1;
         }
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+    return ans;
     
-
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
+    
+    int n , k;
+    cin >> n >> k;
+    int A[n];
+    for(int i=0;i<n;i++){
+        cin >> A[i];
     }
-    
-    
+
+    cout << findPages(A,n,k);
     
     return 0;
 }
-
-

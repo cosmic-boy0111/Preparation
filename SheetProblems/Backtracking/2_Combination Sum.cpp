@@ -80,55 +80,56 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
+set<vector<int>> st;
+
+void choose(vector<int>& candidates, int i, int target, vector<int> temp, int currSum){
+    if(currSum == target){
+        if(temp.size() !=0)
+            st.insert(temp);
+        return;
     }
-
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+    if(i == candidates.size()){
+        return;
     }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
     
 
+    if(currSum + candidates[i] <= target){
+        currSum += candidates[i];
+        temp.push_back(candidates[i]);
+        choose(candidates,i,target,temp,currSum);
+        currSum -= candidates[i];
+        temp.pop_back();
+    }
+
+    choose(candidates,i+1,target,temp,currSum);
+
+}
+
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    candidates.erase(unique(candidates.begin(), candidates.end()), candidates.end());
+    choose(candidates,0,target,{},0);
+    vector<vector<int>> ans;
+    for(auto &x : st)
+        ans.push_back(x);
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+
+    int n , k;
+    cin >> n >> k;
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
+
+    for(auto &x : combinationSum(v,k)){
+        for(auto &y : x)
+            cout << y << " ";
+        cout << endl;
+    }
     
     
     return 0;
 }
-
-

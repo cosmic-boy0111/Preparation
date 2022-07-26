@@ -80,55 +80,86 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+
+bool isSafe(vector<vector<int>> arr,int x,int y,int n){
+
+    for(int row = 0; row<x ;row++){
+        if(arr[row][y] == 1){
+            return false;
+        }
+    }
+
+    int row = x, col = y;
+
+    while (row >= 0 and col >=0){
+        if(arr[row][col] == 1){
+            return false;
+        }
+        row--;
+        col--;
+    }
+
+    row = x;
+    col = y;
+
+    while (row >= 0 and col < n){
+        if(arr[row][col] == 1){
+            return false;
+        }
+        row--;
+        col++;
+    }
+
+    return true;
+
+}
+
+vector<vector<string>> ans;
+bool nQueen(vector<vector<int>> arr,int x,int n){
+    if(x >= n){
+        vector<string> st;
+        for (int i=0; i<n; i++){ 
+            string s = "";
+            for(int j=0;j<n;j++){
+                if(arr[i][j] == 0) s.push_back('.');
+                else s.push_back('Q');
+            }
+            st.push_back(s);
+        }
+        ans.push_back(st);
+        // return true;
+    }
+
+    for(int col=0;col<n;col++){
+        if(isSafe(arr,x,col,n)){
+            arr[x][col] = 1;
+            if(nQueen(arr,x+1,n)){
+                return true;
+            }
+
+            arr[x][col] = 0;
         }
     }
 
     return false;
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+vector<vector<string>> solveNQueens(int n) {
+    vector<vector<int>> arr(n,vector<int>(n,0));
+    bool t = nQueen(arr,0,n);
+    return ans;  
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n;
+    cin >> n;
+    for(auto &x : solveNQueens(n)){
+        for(auto &y : x)
+            cout << y << " ";
+        cout << endl;
+    }
     
     
     return 0;
 }
-
-

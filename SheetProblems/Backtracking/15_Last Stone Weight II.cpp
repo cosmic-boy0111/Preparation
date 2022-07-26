@@ -80,55 +80,58 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
 
-    return false;
+bool isSubset(vector<int>& arr,int n,int sum,vector<vector<int>>& dp){
+    if(sum ==0 )
+        return true;
+
+    if(n==0)
+        return false;
+
+    if(dp[n][sum] != -1)
+        return dp[n][sum];
+
+    if(arr[n-1] <= sum)
+        return dp[n][sum] = isSubset(arr,n-1,sum-arr[n-1],dp) || isSubset(arr,n-1,sum,dp);
+
+    return dp[n][sum] = isSubset(arr,n-1,sum,dp);
+    
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
+
+int lastStoneWeightII(vector<int>& stones) {
+
+    int n = stones.size();
+    int sum = 0;
+    for(auto & x : stones)
+        sum+=x;
+
+    vector<vector<int>> dp(n+1,vector<int>(sum+1,-1));
+
+    vector<int> ansArray;
+    for(int i=0;i<=sum;i++){
+        if(isSubset(stones,n,i,dp)){
+            ansArray.push_back(i);
         }
     }
+    int ans = INT_MAX;
+    for(int i=0;i<=ansArray.size();i++){
+        if(2*ansArray[i] > sum) break;;
+        ans = min(ans,abs(sum-2*ansArray[i]));
+    }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    for(auto & x : v)
+        cin >> x;
     
+    cout << lastStoneWeightII(v);
     
     return 0;
 }
-
-

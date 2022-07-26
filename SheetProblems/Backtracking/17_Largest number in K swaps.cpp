@@ -80,55 +80,50 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+string ans ;
+
+
+void solve(string str,int k){
+    if (k == 0)
+        return;
+ 
+    int n = str.length();
+    for (int i = 0; i < n - 1; i++) {
+
+        for (int j = i + 1; j < n; j++) {
+            if (str[i] < str[j]) {
+
+                swap(str[i], str[j]);
+ 
+                if (str.compare(ans) > 0)
+                    ans = str;
+ 
+                solve(str, k - 1);
+ 
+                swap(str[i], str[j]);
+            }
         }
     }
-
-    return false;
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
+string findMaximumNum(string str, int k){
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
+    ans = str;
+    solve(str,k);
+    return ans;
 
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
+    
+
+    string s;
+    int k;
+    cin >> s >> k;
+    cout << findMaximumNum(s,k);
+
     
     
     
     return 0;
 }
-
-

@@ -78,57 +78,55 @@ void display(Node* root){
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
 vector<int> adj[N];
+
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
+bool ans = false;
 
-    return false;
+bool isValid(vector<int> sums){
+    for(int i=0;i<sums.size()-1;i++)
+        if(sums[i] != sums[i+1])
+            return false;
+    return true;
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+void solve(vector<int>& nums, int idx, vector<int> sums, int target){\
+
+    if(ans) return;
+
+    if(idx == nums.size()){
+        if(isValid(sums))
+            ans = true;
+        return;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
+    for(int i=0;i<sums.size();i++){
+        if(sums[i] + nums[idx] <= target){
+            sums[i] += nums[idx];
+            solve(nums,idx+1,sums,target);
+            sums[i] -= nums[idx];
+        }
+        if(sums[i] ==0 ) break;
+    }
 
+}
+
+bool canPartitionKSubsets(vector<int>& nums, int k) {
+    int sum = accumulate(nums.begin(),nums.end(),0)  ;
+    if(sum%k) return false;
+    vector<int> sums(k,0);
+    solve(nums,0,sums,sum/k);
+    return ans;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
-    
-    
+    int n , k;
+    cin >> n >> k;
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
+
+    cout << canPartitionKSubsets(v,k);
     
     return 0;
 }
-
-

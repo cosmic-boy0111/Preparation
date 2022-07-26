@@ -78,57 +78,65 @@ void display(Node* root){
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
 vector<int> adj[N];
-vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
+vector<vector<int>> visited;
+vector<pair<int,int>> dir = {
+    {-1,0},{0,1},{1,0},{0,-1}
+};
+int ans = 0;
 
-    return false;
+bool isSafe(vector<vector<int>>& mat,int i,int j){
+    return i>=0 and i<mat.size() and j>=0 and j<mat[0].size() and mat[i][j] == 1 and visited[i][j];
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
+void path(vector<vector<int>>& mat,int i,int j,int x,int y,int size){
+    if(i==x and j==y){
+        ans = max(ans,size);
+        return;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
+    if(isSafe(mat,i,j)){
+        visited[i][j] = 0;
+        for(auto &t : dir){
+            if(isSafe(mat,i+t.first,j+t.second)){
+                size++;
+                path(mat,i+t.first,j+t.second,x,y,size);
+                size--;
+            }
+        }
+        visited[i][j] = 1;
+    }
+
+    return;
+
+}
+
+int longestPath(vector<vector<int>>& mat,int i,int j,int x,int y) {
+    for(int i=0;i<mat.size();i++){
+        vector<int> temp(mat[0].size(),1);
+        visited.push_back(temp);
+    }
+    path(mat,i,j,x,y,0);
+    return ans;
 
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n ,m;
+    cin >> n >> m;
+    vector<vector<int>> mat(n,vector<int>(m));
+    for(auto &x : mat)
+        for(auto &y : x)
+            cin >> y;
+
+    int i , j;
+    cin >> i >> j;
+    int x , y;
+    cin >> x >> y;
+
+    cout << longestPath(mat,i,j,x,y) << endl;
     
     
     return 0;
 }
-
-

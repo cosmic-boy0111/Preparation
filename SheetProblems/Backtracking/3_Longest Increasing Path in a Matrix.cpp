@@ -80,55 +80,50 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
-    }
+int travel(vector<vector<int>>& matrix,int i,int j,int pre,vector<vector<int>>& dp){
+    if(i < 0 or i>=matrix.size() or j < 0 or j>=matrix[0].size()) return 0;
+    if(pre >= matrix[i][j]) return 0;
+    if(dp[i][j] != -1) return dp[i][j];
+    int u = travel(matrix,i-1,j,matrix[i][j],dp);
+    int r = travel(matrix,i,j+1,matrix[i][j],dp);
+    int d = travel(matrix,i+1,j,matrix[i][j],dp);
+    int l = travel(matrix,i,j-1,matrix[i][j],dp);
 
-    return false;
+    return dp[i][j] = 1+max(u,max(r,max(d,l)));
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
+int longestIncreasingPath(vector<vector<int>>& matrix) {
+    int longest_path = 0;
+    int n = matrix.size();
+    int m = matrix[0].size();
+    vector<vector<int>> dp(n,vector<int>(m,-1));
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            int path = travel(matrix,i,j,-1,dp);
+            longest_path = max(longest_path,path);
         }
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    return longest_path;
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
+    
+    int n,m;
+    cin >> n >> m;
+    vector<vector<int>> mat;
+    for(int i=0;i<n;i++){
+        vector<int> v(m);
+        for(auto &x : v){
             cin >> x;
-        cout << AggressiveCows(v,k);
+        }
+        mat.push_back(v);
     }
+
+
+    cout << longestIncreasingPath(mat);
     
     
     
     return 0;
 }
-
-

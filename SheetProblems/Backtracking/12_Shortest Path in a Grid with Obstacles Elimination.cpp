@@ -78,57 +78,60 @@ void display(Node* root){
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
 vector<int> adj[N];
-vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+vector<pair<int,int>> way = {
+    {-1,0}, {0,1}, {1,0}, {0,-1}
+};
+
+int shortestPath(vector<vector<int>>& grid, int k) {
+    int n = grid.size();
+    int m = grid[0].size();
+    vector<vector<int> > visited(n,vector<int>(m,-1));
+    queue<vector<int>> q;
+    q.push({0,0,0,k});
+    while (!q.empty()){
+        vector<int> temp = q.front();
+        q.pop();
+        int x  = temp[0], y = temp[1], len = temp[2], obs = temp[3];
+        if(x < 0 || y < 0 || x >= n || y >=m)
+            continue;
+        if(x == n-1 and y == m-1)
+            return len;
+        if(grid[x][y] == 1){
+            if(obs > 0)
+                obs--;
+            else
+                continue;
         }
+
+        if(visited[x][y] < obs){
+            visited[x][y] = obs;
+            q.push({x + 1, y, len + 1, obs});
+            q.push({x - 1, y, len + 1, obs});
+            q.push({x, y + 1, len + 1, obs});
+            q.push({x, y - 1, len + 1, obs});    
+        }
+
     }
 
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+    return -1;
     
-
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+    int n ,m;
+    cin >> n >> m;
+    vector<vector<int>> v(n,vector<int>(m));
+    for(auto &x : v)
+        for(auto &y : x)
+            cin >> y;
+
+    int k;
+    cin >> k;
+
+    cout << shortestPath(v,k);
     
     
     return 0;
 }
-
-

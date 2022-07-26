@@ -80,55 +80,39 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
+map<pair<int,int>,int> mp;
+bool subsetSum(vector<int> nums,int n,int temp,int sum){
+    if(n==0) return false;
+    if(temp == sum) return true;
+    if(mp.find({n,temp}) != mp.end()) return mp[{n,temp}];
+    if(temp + nums[n-1] <= sum){
+        return mp[{n,temp}] = subsetSum(nums,n-1,temp + nums[n-1],sum) || subsetSum(nums,n-1,temp,sum);
     }
-
-    return false;
+    return mp[{n,temp}] = subsetSum(nums,n-1,temp,sum);
 }
 
-int AggressiveCows(vector<int> nums,int k){
+bool canPartition(vector<int>& nums){
     int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
-
+    int sum = 0;
+    for(auto &x : nums)
+        sum+=x;
+    if(sum%2 == 1) return false;
+    return subsetSum(nums,n,0,sum/2);
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
+    
+
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
+
+    cout << canPartition(v) ;
+
     
     
     
     return 0;
 }
-
-

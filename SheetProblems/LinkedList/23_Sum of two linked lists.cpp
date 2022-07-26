@@ -80,55 +80,73 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
-        }
+stack<int> takeStack(Node* l){
+    stack<int> s;
+    while (l != NULL){
+        s.push(l->val);
+        l = l->next;
     }
 
-    return false;
+    return s;
+    
 }
 
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
+Node* addTwoNumbers(Node* l1, Node* l2) {
+    
+    stack<int> s1 = takeStack(l1);
+    stack<int> s2 = takeStack(l2);
+
+    Node* head = NULL;
+    int carry  = 0;
+
+    while ( !s1.empty() || !s2.empty() || carry ){
+        int sum = carry;
+        if(!s1.empty()){
+            sum += s1.top();
+            s1.pop();
         }
+        if(!s2.empty()){
+            sum+=s2.top();
+            s2.pop();
+        }
+        Node* n = new Node(sum%10);
+        n->next = head;
+        head = n;
+        carry = sum/10;
     }
 
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
-    
 
+    return head;
+    
+    
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
+    
+    Node* l1 = NULL;
+    Node* l2 = NULL;
+
+    int n;
+    cin >> n;
+    for(int i=0;i<n;i++){
+        int x;
+        cin >> x;
+        insertAtTail(l1,x);
     }
+    int m;
+    cin >> m;
+    for(int i=0;i<m;i++){
+        int x;
+        cin >> x;
+        insertAtTail(l2,x);
+    }
+
+    display(l1);
+    display(l2);
+
+    display(addTwoNumbers(l1,l2));
     
     
     
     return 0;
 }
-
-

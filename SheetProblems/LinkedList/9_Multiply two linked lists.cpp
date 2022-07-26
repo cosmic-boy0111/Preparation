@@ -80,55 +80,26 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+long long  multiplyTwoLists (Node* l1, Node* l2){
+    long long n = 1000000007;
+    long long n1 = 0 , n2 = 0;
+    while ( l1 || l2 ){
+        if(l1){
+            n1 = (n1*10)%n + l1->val;
+            l1 = l1->next;
+        }
+        if(l2){
+            n2 = (n2*10)%n + l2->val;
+            l2 = l2->next;
         }
     }
 
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+    return ((n1%n) * (n2%n))%n;
     
-
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
-    
     
     
     return 0;
 }
-
-

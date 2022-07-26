@@ -83,7 +83,6 @@ void solveSodoku(vector<vector<char>> &a){
     map<pair<int,int>,map<int,int>> mp;
     vector<map<int,int>> row(9);
     vector<map<int,int>> col(9);
-
     inc(i,0,9){
         inc(j,0,9){
             if(a[i][j]!='.'){
@@ -93,7 +92,6 @@ void solveSodoku(vector<vector<char>> &a){
             }
         }
     }
-
     helper(0,0,a,mp,row,col);
 }
 

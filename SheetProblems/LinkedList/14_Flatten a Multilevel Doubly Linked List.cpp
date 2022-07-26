@@ -27,13 +27,15 @@ void printBinary(int n){
 class node{
     public:
         int val;
-        node* left;
-        node* right;
+        node* next;
+        node* child;
+        node* prev;
 
         node(int data = 0){
             val = data;
-            left = NULL;
-            right = NULL;
+            next = NULL;
+            prev = NULL;
+            child = NULL;
         }
 };
 
@@ -61,7 +63,7 @@ void insertAtTail(Node* &root,int val){
     temp->next = new Node(val); 
 }
 
-void display(Node* root){
+void display(node* root){
     while (root != NULL){
         cout << root->val << " ";
         root = root->next;
@@ -80,55 +82,52 @@ void display(Node* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-bool isSatisfy(vector<int>& nums,int dist,int k){
-    k--;
-    int pre = nums[0];
-    for(int i=1;i<nums.size();i++){
-        if(nums[i] - pre >= dist){
-            k--;
-            if(k == 0) return true;
-            pre = nums[i];
+node* flatten(node* head) {
+    if(head == NULL) return NULL;
+    if(head->next == NULL and head->child == NULL) return head;
+    node* temp = head;
+    while (temp != NULL){
+        if(temp->child == NULL){
+            temp = temp->next;
+            continue;
         }
+        node* newTail = flatten(temp->child);
+        node* preNext = temp->next;
+        temp->next = newTail;
+        newTail->prev = temp;
+        temp->child = NULL;
+        if(preNext != NULL){
+            node* temp1 = newTail;
+            while (temp1->next != NULL){
+                temp1 = temp1->next;
+            }
+            temp1->next = preNext;
+            preNext->prev = temp1;
+        }
+        temp = preNext;
     }
 
-    return false;
-}
-
-int AggressiveCows(vector<int> nums,int k){
-    int n = nums.size();
-    sort(nums.begin(),nums.end());
-    int l = nums[0];
-    int r = nums[n-1];
-    while (r-l > 1){
-        int mid = (l+r)/2;
-        if(isSatisfy(nums,mid,k)){
-            l = mid;
-        }else{
-            r = mid-1;
-        }
-    }
-
-    if(isSatisfy(nums,r,k)) return r;
-    return l;
+    return head;
     
-
 }
 
 int32_t main(){
-    long long T;
-    cin >> T;
-    while(T--){
-        int n , k;
-        cin >> n >> k;
-        vector<int> v(n);
-        for(auto &x : v)
-            cin >> x;
-        cout << AggressiveCows(v,k);
-    }
     
+
+    node* root = new node(1);
+    root->next = new node(2);
+    root->next->next = new node(3);
+    root->next->next->next = new node(4);
+    root->next->next->next->next = new node(5);
+    root->next->next->next->next->next = new node(6);
+    root->next->next->child = new node(7);
+    root->next->next->child->next = new node(8);
+    root->next->next->child->next->next = new node(9);
+    root->next->next->child->next->next->next = new node(10);
+    root->next->next->child->next->child = new node(11);
+    root->next->next->child->next->child->next = new node(12);
     
+    display(flatten(root));
     
     return 0;
 }
-
-
