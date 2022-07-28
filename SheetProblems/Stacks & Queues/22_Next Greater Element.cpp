@@ -32,48 +32,48 @@ void printBinary(int n)
 class node
 {
 public:
-    int val;
+    int data;
     node *left;
     node *right;
 
-    node(int data = 0)
+    node(int val = 0)
     {
-        val = data;
+        data = val;
         left = NULL;
         right = NULL;
     }
 };
 
-class Node
+class ListNode
 {
 public:
     int val;
-    Node *next;
+    ListNode *next;
 
-    Node(int data = 0)
+    ListNode(int data = 0)
     {
         val = data;
         next = NULL;
     }
 };
 
-void insertAtTail(Node *&root, int val)
+void insertAtTail(ListNode *&root, int val)
 {
     if (root == NULL)
     {
-        root = new Node(val);
+        root = new ListNode(val);
         return;
     }
-    Node *temp = root;
+    ListNode *temp = root;
     while (temp->next != NULL)
     {
         temp = temp->next;
     }
 
-    temp->next = new Node(val);
+    temp->next = new ListNode(val);
 }
 
-void display(Node *root)
+void display(ListNode *root)
 {
     while (root != NULL)
     {
@@ -92,38 +92,24 @@ void display(Node *root)
 vector<int> adj[N];
 vector<bool> visited(N, false);
 
-bool wordBreak(string s, vector<string> &wordDict)
+vector<long long> nextLargerElement(vector<long long> arr, int n)
 {
-    vector<bool> dp(s.size() + 1, false);
-    dp[0] = true;
-    unordered_set<string> st;
-    for (auto &x : wordDict)
-        st.insert(x);
-
-    for (int i = 0; i <= s.size(); i++)
+    stack<long long> st;
+    vector<long long> ans(n, -1);
+    for (int i = n - 1; i >= 0; i--)
     {
-        for (int j = i + 1; j <= s.size(); j++)
-        {
-            string temp = s.substr(i, j - i);
-            if (st.find(temp) != st.end() && dp[i])
-                dp[j] = true;
-        }
-
+        while (!st.empty() and st.top() <= arr[i])
+            st.pop();
+        if (!st.empty())
+            ans[i] = st.top();
+        st.push(arr[i]);
     }
-    return dp[s.size()];
+
+    return ans;
 }
 
 int32_t main()
 {
-
-    string s;
-    int n;
-    cin >> s >> n;
-    vector<string> v(n);
-    for (auto &x : v)
-        cin >> x;
-
-    cout << wordBreak(s, v);
 
     return 0;
 }
