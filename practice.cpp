@@ -705,16 +705,28 @@ class node{
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-class X {
-    public : 
-        int x;
-};
+typedef struct Node
+{
+    int data;
+    struct Node *left, *right;
+} Node;
+
+
+// A utility function to create a new tree node
+Node* newNode( int data )
+{
+    Node* temp = (Node *)malloc( sizeof( Node ) );
+    temp->data = data;
+    temp->left = temp->right = NULL;
+    return temp;
+}
 
 int32_t main(){
     
-    X a = {10};
-    X b = a;
-    cout << a.x << " " << b.x << endl;
+
+    Node* t = newNode(5);
+    cout << t->data << endl;
+    
     
     
     
