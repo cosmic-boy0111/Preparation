@@ -80,62 +80,34 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
-
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
-    }
-
-    vector<vector<int>> d = a;
+vector<int> vertexCover(int n,vector<int> adj[]){
+    vector<int> vis(n,0);
     for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+        if(vis[0]) continue;
+        for(auto &x : adj[i]){
+            if(!vis[x]){
+                vis[i] = true;
+                vis[x] = true;
+                break;
             }
         }
     }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
+    vector<int> ans;
     for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
+        if(vis[i] != 0) ans.push_back(i);
     }
 
     return ans;
-
-
-
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
     
-    cout << findTheCity(n,v,t);
     
     
     return 0;

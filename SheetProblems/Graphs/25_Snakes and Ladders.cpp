@@ -80,62 +80,55 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
-    }
-
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+int snakesAndLadders(vector<vector<int>>& board) {
+    unordered_map<int, int> mp;
+    int n = board.size();
+    for(int i = n-1; i >= 0; i--) {
+        for(int j = 0; j < n; j++) {
+            if(board[i][j] != -1) {
+                int val;
+                if((n-i)%2 != 0) val = (n-i-1)*n + j + 1;
+                else val = (n-i-1)*n + n - j;
+                mp[val] = board[i][j];
             }
         }
     }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
+    queue<pair<int, int>> q;
+    vector<int> visited(n*n+1, false);
+    q.push({1, 0});
+    while(!q.empty()) {
+        int node = q.front().first;
+        int moves = q.front().second;
+        q.pop();
+        if(node == n*n) return moves;
+        if(visited[node]) continue;
+        visited[node] = true;
+        for(int k = 1; k <= 6; k++) {
+            if(node+k > n*n) continue;
+            int x = node + k;
+            if(mp.find(x) != mp.end()) x = mp[x];
+            q.push({x, moves+1});
         }
     }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
+    return -1;
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
     
-    cout << findTheCity(n,v,t);
+    vector<vector<int>> board = {   {-1,-1,-1,-1,-1,-1},
+                                    {-1,-1,-1,-1,-1,-1},
+                                    {-1,-1,-1,-1,-1,-1},
+                                    {-1,30,-1,-1,13,-1},
+                                    {-1,-1,-1,-1,-1,-1},
+                                    {-1,15,-1,-1,-1,-1}};
+
+    // vector<vector<int>> board = {{-1,-1},{-1,3}};
+
+    cout << snakesAndLadders(board);
+    
     
     
     return 0;

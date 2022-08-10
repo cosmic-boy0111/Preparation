@@ -80,62 +80,60 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+vector<vector<int>> ans;
+
+void solve(int src,int dst,vector<int> adj[],vector<int>& vis,vector<int> temp){
+    if(src == dst){
+        temp.push_back(dst);
+        ans.push_back(temp);
+        return;
     }
-
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
+    temp.push_back(src);
+    vis[src] = true;
+    for(auto x : adj[src]){
+        if(vis[x]) continue;
+        solve(x,dst,adj,vis,temp);
     }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
-        }
-    }
-
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
+    temp.pop_back();
+    vis[src] = false;
 
 }
 
-int32_t main(){
+vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+    int n = graph.size();
+    vector<int> vis(n,0);
+    vector<int> adj[n];
+    for(int i=0;i<n;i++){
+        for(auto x : graph[i])
+            adj[i].push_back(x);
+    }
 
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+    solve(0,n-1,adj,vis,{});
+    return ans;
+}
+
+int32_t main(){
     
-    cout << findTheCity(n,v,t);
+    int n;
+    cin >> n;
+    vector<vector<int>> v;
+    for(int i=0;i<n;i++){
+        int m;
+        cin >> m;
+        vector<int> temp(m);
+        for(auto &x : temp)
+            cin >> x;
+        v.push_back(temp);
+    }
+
+    
+
+    for(auto &x : allPathsSourceTarget(v)){
+        for(auto &y : x)
+            cout << y << " ";
+        cout << endl;
+    }
     
     
     return 0;

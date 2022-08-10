@@ -80,63 +80,61 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+    set<string> st;
+    bool initial = true;
+    for(auto x : wordList){
+        if(x == endWord) initial = false;
+        st.insert(x);
     }
+    if(initial) return 0;
+    queue<string> q;
+    q.push(beginWord);
+    int dpt = 1;
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+    while ( !q.empty() ){
+        int t = q.size();
+        for(int i=0;i<t;i++){
+            string start = q.front();
+            q.pop();
+            if(start == endWord) return dpt;
+            for(int j = 0; j< start.size() ;j++){
+                string temp = start;
+                for(char c='a';c<='z';c++){
+                    temp[j] = c;
+                    if(temp == start) continue;
+                    if(st.find(temp) != st.end()){
+                        q.push(temp);
+                        st.erase(temp);
+                    }
+                }
             }
         }
+
+        dpt++;
     }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
 
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
+    return 0;
+    
 
 }
 
 int32_t main(){
+    
+    string src , dst;
+    cin >> src >> dst;
+    int n;
+    cin >> n;
+    vector<string> list(n);
+    for(auto &x : list)
+        cin >> x;
 
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
     
-    cout << findTheCity(n,v,t);
-    
+    cout << ladderLength(src,dst,list);
+
+   
     
     return 0;
 }

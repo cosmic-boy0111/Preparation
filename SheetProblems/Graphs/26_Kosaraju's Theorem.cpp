@@ -80,62 +80,70 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+
+void dfs(int index,vector<int> adj[],stack<int>& st,vector<int>& vis)  {
+    vis[index] = true;
+    for(auto &x : adj[index]){
+        if(vis[x]) continue;
+        dfs(x,adj,st,vis);
     }
+    st.push(index);
+}
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
+void find(int index,vector<int> adj[],vector<int>& vis,vector<int>& temp){
+
+    vis[index] = true;
+    temp.push_back(index);
+    for(auto &x : adj[index]){
+        if(vis[x]) continue;
+        find(x,adj,vis,temp);
     }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
-        }
-    }
-
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
 
 }
 
-int32_t main(){
+int kosaraju(int V, vector<int> adj[]){
 
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+    stack<int> st;
+    vector<int> vis(V,0);
+
+    for(int i=0;i<V;i++){
+        if(!vis[i])
+            dfs(i,adj,st,vis);
+    }
+
+    vector<int> transpose[V];
+    for(int i=0;i<V;i++){
+        vis[i] = 0;
+        for(auto &x : adj[i]){
+            transpose[x].push_back(i);
+        }
+    }
+
+    vector<vector<int>> ans;
+
+    while (!st.empty()){
+        int t = st.top();
+        st.pop();
+        if(vis[t]) continue;
+        vector<int> temp;
+        find(t,transpose,vis,temp);
+        ans.push_back(temp);
+    }
     
-    cout << findTheCity(n,v,t);
+
+    return ans.size();
+
+}
+
+
+int32_t main(){
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
+    
     
     
     return 0;

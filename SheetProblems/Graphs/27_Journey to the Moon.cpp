@@ -80,63 +80,53 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+void dfs(int index,vector<int> adj[],vector<int>& vis,int &cnt){
+    vis[index] = true;
+    cnt ++;
+    for(auto &x : adj[index]){
+        if(vis[x]) continue;
+        dfs(x,adj,vis,cnt);
+    }
+}
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+int journeyToMoon(int n, vector<vector<int>> astronaut) {
+
+    vector<int> adj[n];
+    vector<int> vis(n,0);
+    vector<int> ans;
+    for(auto &x : astronaut){
+        adj[x[0]].push_back(x[1]);
+        adj[x[1]].push_back(x[0]);
     }
 
-    vector<vector<int>> d = a;
     for(int i=0;i<n;i++){
-        d[i][i] = 0;
+        int cnt = 0;
+        if(!vis[i]) dfs(i,adj,vis,cnt);
+        if(cnt != 0) ans.push_back(cnt);
     }
 
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
-        }
-    }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
+    int sum = 0;
+    int result = 0;
+    for(int size : ans)
+    {
+        result += sum*size;
+        sum += size;    
+    }   
+    return result;
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
+    
+    int n , m;
+    cin >> n >> m;
+    vector<vector<int>> v(m,vector<int>(2));
     for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+        cin >> x[0] >> x[1];
     
-    cout << findTheCity(n,v,t);
-    
+
+    cout << journeyToMoon(n,v);
     
     return 0;
 }

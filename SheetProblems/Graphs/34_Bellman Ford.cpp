@@ -80,62 +80,32 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
+int isNegativeWeightCycle(int n, vector<vector<int>>edges){
+    vector<int> dist(n,INT_MAX);
+    for(int i=0;i<n-1;i++){
+        for(auto &x : edges){
+            if(dist[x[0]] != INT_MAX and dist[x[0]] + x[2] < dist[x[1]])
+                dist[x[1]] = dist[x[0]] + x[2];
+        }
+    }
+
     for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+        if(dist[x[0]] != INT_MAX and dist[x[0]] + x[2] < dist[x[1]])
+            return 1;
     }
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
-        }
-    }
-
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
+    return 0;
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
     
-    cout << findTheCity(n,v,t);
     
     
     return 0;

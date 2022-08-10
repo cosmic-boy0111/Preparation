@@ -80,62 +80,60 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
-    }
+vector<int> calMaxDist(int src,int n,vector<pair<int,int>> adj[]){
+    vector<int> dist(n, INT_MIN);
+    dist[src] = 0;
+    set<pair<int, int> > s;
+    s.insert(make_pair(dist[src], src));
+    
+    while(!s.empty()){
+        auto top = *(s.begin());
+        int d = top.first;
+        int node = top.second;
+        s.erase(s.begin());
+        
+        for(auto nbr: adj[node]){
+            int v = nbr.first;
+            int w = nbr.second;
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+            //only this cond. differs from dijkstra algo, get the max dist
+            if(w+d > dist[v]){
+                auto f = s.find(make_pair(dist[v], v));
+                if(f != s.end()){
+                    s.erase(f);
+                }
+                dist[v] = w + d;
+                s.insert(make_pair(dist[v], v));
             }
         }
     }
+    return dist;
+}
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
+vector <int> maximumDistance(vector<vector<int>> edges,int v,int e,int src){
+    vector<pair<int,int>> adj[v];
+    for(auto &x : edges){
+        adj[x[0]].push_back({x[1],x[2]});
     }
 
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
 
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
+    return calMaxDist(src,v,adj);
 
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
+    int v,e,src;
+    cin >> v >> e >> src;
+    vector<vector<int>> edges(v,vector<int>(3));
+    for(auto &x : edges){
         cin >> x[0] >> x[1] >> x[2];
-    
-    cout << findTheCity(n,v,t);
+    }
+
+    for(auto &x : maximumDistance(edges,v,e,src)){
+        cout << x << " ";
+    }
     
     
     return 0;

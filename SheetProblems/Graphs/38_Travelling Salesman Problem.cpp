@@ -80,62 +80,37 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
-
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+void solve(int i,vector<vector<int>>& cost,vector<int>& vis,int n,int amount,int& final_ans,int count){
+    if(count==n-1){
+        final_ans=min(final_ans,amount+cost[i][0]);
+        return;
     }
-
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
+    for(int j=0;j<n;j++){
+        if(vis[j]==0){
+            vis[j]=1;
+            solve(j,cost,vis,n,amount+cost[i][j],final_ans,count+1);
+            vis[j]=0;
         }
     }
-
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
-
+ 
+}
+int total_cost(vector<vector<int>>cost){
+    int n=cost.size();
+    vector<int> vis(n,0);
+    vis[0]=1;
+    int final_ans=INT_MAX;
+    solve(0,cost,vis,n,0,final_ans,0);
+    return final_ans;
 }
 
-int32_t main(){
 
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+int32_t main(){
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
     
-    cout << findTheCity(n,v,t);
     
     
     return 0;

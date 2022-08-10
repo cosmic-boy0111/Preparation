@@ -80,63 +80,54 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
-    }
+bool isSafe(int i,int j,vector<int> adj[],vector<int>& col){
+    for(auto x : adj[i])
+        if(col[x] == j) return false;
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
+    return true;
+}
 
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
+bool solve(int i,int n,vector<int> adj[],vector<int>& col){
+    
+    if(i > n) return true;
+    for(int j=1;j<=4;j++){
+        if(isSafe(i,j,adj,col)){
+            col[i] = j;
+            if(solve(i+1,n,adj,col)) return true;
+            col[i] = -1;
         }
     }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
+    return false;
+}
+
+vector<int> gardenNoAdj(int n, vector<vector<int>>& paths) {
+
+
+    vector<int> col(n+1,-1);
+    vector<int> adj[n+1];
+    for(auto x : paths){
+        adj[x[0]].push_back(x[1]);
+        adj[x[1]].push_back(x[0]);
     }
+    solve(1,n,adj,col);
+    col.erase(col.begin());
 
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
+    return col;
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
+    
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> v(m,vector<int>(2));
     for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+        cin >> x[0] >> x[1];
     
-    cout << findTheCity(n,v,t);
-    
-    
+    for(auto &x : gardenNoAdj(n,v))
+        cout << x << " ";
+
     return 0;
 }

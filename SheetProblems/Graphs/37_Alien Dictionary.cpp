@@ -80,62 +80,54 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
-
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+  
+void topoSort(char i,unordered_map<char,vector<char>> mp,unordered_map<char,bool>& vis,string& ans){
+    vis[i] = true;
+    for(auto x : mp[i]){
+        if(!vis[x]) topoSort(x,mp,vis,ans);
     }
+    ans += i;
+}
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
+string findOrder(string dict[], int N, int K) {
+    unordered_map<char,vector<char>> mp;
+    unordered_map<char,bool>  vis;
 
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+    for(int i=0;i<N-1;i++){
+        string a = dict[i];
+        string b = dict[i+1];
+        int j = 0;
+        while ( j < min(a.size(),b.size()) ){
+            if(a[j] != b[j]){
+                mp[a[j]].push_back(b[j]);
+                break;
             }
+            j++;
         }
     }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
+    string ans = "";
+    for(auto x : mp)
+        vis[x.first] = false;
+
+    for(auto x : mp){
+        if(!vis[x.first])
+            topoSort(x.first,mp,vis,ans);
     }
 
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
+    reverse(ans.begin(),ans.end());
 
     return ans;
-
-
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
     
-    cout << findTheCity(n,v,t);
     
     
     return 0;

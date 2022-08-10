@@ -80,62 +80,48 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+
+int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+    int INF =  INT_MAX;
+
+    vector<pair<int,int>> adj[n];
+    for(auto &x : flights)
+        adj[x[0]].push_back({x[1],x[2]});
+
+    int dist[n+10][k+2];
+    for(int i=0;i<n+10;i++){
+        for(int j=0;j<k+2;j++){
+            dist[i][j] = INF;
+        }
     }
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
+    priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>> q;
+    q.push({0,src,0});
+    dist[src][0] = 0;
+    while ( !q.empty() ){
+        vector<int> t = q.top();
+        q.pop();
+        int d = t[0];
+        int n = t[1];
+        int s = t[2];
 
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
+        if(n == dst) return d;
+        if(s > k) continue;
+        for(auto &x : adj[n]){
+            if(x.second + d < dist[x.first][s+1]){
+                dist[x.first][s+1] = x.second + d;
+                q.push({dist[x.first][s+1],x.first,s+1});
             }
         }
     }
 
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
-
-
+    return -1;
+    
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
     
-    cout << findTheCity(n,v,t);
     
     
     return 0;

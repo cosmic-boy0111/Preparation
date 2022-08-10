@@ -77,65 +77,55 @@ void display(ListNode* root){
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
 
-vector<int> adj[N];
-vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
-
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
-    }
-
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
-    }
-
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
-        }
-    }
-
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
+bool dfs(int i,vector<int> adj[],vector<int>& vis,vector<int>& col){
+    vis[i] = 1;
+    bool ans = true;
+    for(auto x : adj[i]){
+        if(col[x] != -1 and col[x] == col[i]) return false;
+        if(vis[x]) continue;
+        col[x] = !col[i];
+        ans = ans and dfs(x,adj,vis,col);
     }
 
     return ans;
+}
 
+bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+    vector<int> vis(n+1,0);
+    vector<int> col(n+1,-1);
+    vector<int> adj[n+1];
+    for(auto &x : dislikes){
+        adj[x[0]].push_back(x[1]);
+        adj[x[1]].push_back(x[0]);
+    }
 
+    bool ans = true;
+
+    for(int i=1;i<=n;i++){
+        col[i] = 0;
+        if(!vis[i]){
+            ans = ans and dfs(i,adj,vis,col);
+        }
+    }
+  
+
+    return ans;
 
 }
 
 int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
     
-    cout << findTheCity(n,v,t);
+    int n;
+    cin >> n;
+    int m;
+    cin >> m;
+    vector<vector<int>> v(m,vector<int>(2));
+    for(auto &x : v)  
+        cin >> x[0] >> x[1];
+    
+    cout << possibleBipartition(n,v);
+
     
     
     return 0;

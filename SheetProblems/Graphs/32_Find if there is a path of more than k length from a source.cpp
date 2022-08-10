@@ -80,62 +80,63 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
 
-    vector<vector<int>> a(n,vector<int>(n,1e7));
-    for(auto &x : edges){
-        a[x[0]][x[1]] = x[2];
-        a[x[1]][x[0]] = x[2];
+bool solve(int i,int sum,vector<pair<int,int>> adj[],vector<int>& vis,int target){
+
+    if(sum >= target) return true;
+    vis[i] = true;
+    for(auto &x : adj[i]){
+        if(vis[x.first]) continue;
+        sum += x.second;
+        if(solve(x.first,sum,adj,vis,target)) return true;
+        sum -= x.second;
     }
 
-    vector<vector<int>> d = a;
-    for(int i=0;i<n;i++){
-        d[i][i] = 0;
+    vis[i] = false;
+
+    return false;
+
+}
+
+bool findPathMoreThanK(int n,vector<vector<int>>& edges,int target) {
+
+
+    vector<pair<int,int>> adj[n];
+    vector<int> vis(n,0);
+    for(auto x : edges){
+        adj[x[0]].push_back({x[1],x[2]});
+        adj[x[1]].push_back({x[0],x[2]});
     }
 
-    for(int k=0;k<n;k++){
-        for(int i=0;i<n;i++){
-            for(int j=0;j<n;j++){
-                d[i][j] = min(d[i][j],d[i][k] + d[k][j]);
-            }
-        }
-    }
-
-    int mx = n;
-    unordered_map<int,unordered_set<int>> mp;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            if(d[i][j] <= distanceThreshold)
-                mp[i].insert(j);
-        }
-    }
-
-    for(auto it:mp){
-        if(it.second.size()<mx)
-            mx = it.second.size();
-    }
-
-    int ans = 0;
-    for(auto &x : mp){
-        if(x.second.size() == mx)
-            ans = max(ans,x.first);
-    }
-
-    return ans;
-
+    return solve(0,0,adj,vis,target);
 
 
 }
 
-int32_t main(){
-
-    int n , t;
-    cin >> n >> t;
-    vector<vector<int>> v(n,vector<int>(3));
-    for(auto &x : v)
-        cin >> x[0] >> x[1] >> x[2];
+bool pathMoreThanK(int V, int E, int k, int a[]) {
+    vector<vector<int>> edges;
+    int i =0;
+    while ( i < E*3-2 ){
+        vector<int> temp;
+        for(int j=0;j<3;j++){
+            temp.push_back(a[i++]);
+        }
+        edges.push_back(temp);
+    }
     
-    cout << findTheCity(n,v,t);
+    return findPathMoreThanK(V,edges,k);
+    
+}
+
+int32_t main(){
+    
+
+    int a[] = {1,2,1,0,2,7};
+    int V = 3;
+    int E = 2;
+    int K = 8;
+
+    cout << pathMoreThanK(V,E,K,a);
     
     
     return 0;
