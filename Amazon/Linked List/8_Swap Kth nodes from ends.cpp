@@ -80,42 +80,52 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-int knapSack(int N, int W, int val[], int wt[]){
-    int dp[N+1][W+1];
-    for(int i=0;i<N+1;i++){
-        for(int j=0;j<W+1;j++){
-            if(i ==0 or j ==0)
-                dp[i][j] = 0;
-        }
+int length(ListNode* root){
+    int l = 0;
+    while ( root != NULL ){
+        l++;
+        root = root->next;
     }
 
-    for(int i=1;i<N+1;i++){
-        for(int j=1;j<W+1;j++){
-            if(wt[i] <= j){
-                dp[i][j] = max(val[i] + dp[i][j-wt[i]],dp[i-1][j]);
-            }else{
-                dp[i][j] = dp[i-1][j];
-            }
-        }
+    return l;
+    
+}
+
+ListNode *swapkthnode(ListNode* head, int num, int k){
+
+    if(k  > num) return head;
+
+    ListNode* ptr1 = NULL;
+    ListNode* temp1 = head;
+    ListNode* ptr2 = NULL;
+    ListNode* temp2 = head;
+
+    for(int i=0;i<k-1;i++){
+        ptr1 = temp1;
+        temp1 = temp1->next;
     }
 
-    return dp[N][W];
+    for(int i=0;i<num-k;i++){
+        ptr2 = temp2;
+        temp2 = temp2->next;
+    }
+
+    if(ptr1) ptr1->next = temp2;
+    if(ptr2) ptr2->next = temp1;
+    ListNode* t = temp1->next;
+    temp1->next = temp2->next;
+    temp2->next = t;
+
+    if(k == 1) head = temp2;
+    if(k == num) head = temp1;
+
+    return head;    
+
 }
 
 int32_t main(){
     
 
-    int n, w;
-    cin >> n >> w;
-    int val[n];
-    int wt[n];
-    for(int i=0;i<n;i++){
-        cin >> val[i];
-    }
-    for(int i=0;i<n;i++){
-        cin >> wt[i];
-    }
-    
     
     
     return 0;

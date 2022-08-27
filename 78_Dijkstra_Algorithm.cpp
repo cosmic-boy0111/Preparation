@@ -47,6 +47,9 @@ vector<pair<int,int>> g[N];
 // int INF = N;
 
 int dijkstra(int source, int n,vector<pair<int,int>> g[]){
+
+    
+
     int N = 1e6;
     int INF = N;
     vector<int> vis(N,0);

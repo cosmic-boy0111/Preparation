@@ -102,7 +102,8 @@ int jump(vector<int>& nums) {
     while(nums[0]){
         mini=min(mini,solve(x+nums[0]--,n,v,nums));
     }
-    return mini;
+    int mx = 1e8+1;
+    return mini >= mx ? -1 : mini ;
     
 }
 

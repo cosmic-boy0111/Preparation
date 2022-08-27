@@ -83,7 +83,7 @@ vector<bool> visited(N,false);
 stack<int> st;
 unordered_map<int,int> mp;
 
-TreeNode* solve(vector<int> v,int start, int end){
+TreeNode* solve(int start, int end){
     if(start > end)
         return NULL;
     if(start == end){
@@ -95,8 +95,8 @@ TreeNode* solve(vector<int> v,int start, int end){
     st.pop();
     int i = mp[t];
     TreeNode* root = new TreeNode(t);
-    root->left = solve(v,start,i-1);
-    root->right = solve(v,i+1,end);
+    root->left = solve(start,i-1);
+    root->right = solve(i+1,end);
     return root;
 }
 
@@ -105,7 +105,7 @@ TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         st.push(preorder[i]);
     for(int i=0;i<inorder.size();i++)
         mp[inorder[i]] = i;
-    return solve(inorder,0,inorder.size()-1);
+    return solve(0,inorder.size()-1);
     
 }
 
