@@ -29,6 +29,7 @@ class TreeNode{
         int val;
         TreeNode* left;
         TreeNode* right;
+        TreeNode* random;
 
         TreeNode(int data = 0){
             val = data;
@@ -84,22 +85,40 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-int findZeroes(int arr[], int n, int m) {
-    int start = 0;
-    int end = 0;
-    int count = 0;
-    int ans = 0;
-    for(int end=0;end<n;end++){
-        if(arr[end] == 0) count++;
 
-        while (count > m){
-            if(arr[start++] == 0) count--;
-        }
+unordered_map<TreeNode*,TreeNode*> mp;
 
-        ans = max(ans,end-start+1);
+TreeNode* solve(TreeNode* root){
+    TreeNode* n = new TreeNode(root->val);
+    if(root->left){
+        n->left = solve(root->left);
+    }
+    if(root->right){
+        n->right = solve(root->right);
     }
 
-    return ans;
+    mp[root] = n;
+    return n;
+
+}
+
+void assign(TreeNode* root,TreeNode* &n){
+    if(root ==NULL) return;
+    if(root->random){
+        n->random = mp[root->random];
+    }
+    assign(root->left,n->left);
+    assign(root->right,n->right);
+}
+
+TreeNode* cloneTree(TreeNode* tree){
+    
+    if(tree == NULL) return NULL;
+    TreeNode* newNode = solve(tree);
+
+    assign(tree,newNode);
+    return newNode;
+
 }
 
 int32_t main(){
