@@ -16,6 +16,8 @@ using namespace std;
 #define each(x,target) for(auto &x:target)
 const int N = 1e6, MOD = 1e9+7;
 
+#include<iterator>
+
 void printBinary(int n){
     for(int i=10;i>=0;i--){
         if((n>>i) & 1) cout << 1;
@@ -82,42 +84,48 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+vector<long long> collectMaximumOranges(int n,int q,vector<vector<int>> trees,vector<vector<int>> queries){
+    sort(trees.begin(),trees.end());
+    vector<long long> ans;
+    for(auto &x : queries){
+        long long left = x[0];
+        long long right = x[1];
+        long long sum = 0;
+        for(auto &x : trees){
+            if(x[0] >= left and x[0] <= right){
+                sum += x[1];
+            }else if(x[0] >= right){
+                break;
+            }
         }
+        ans.push_back(sum);
     }
 
-
     return ans;
-
 }
+
 
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int n , q;
+    cin >> n >> q;
+    vector<vector<int>> trees(n,vector<int>(2));
+    for(auto &x : trees){
+        cin >> x[0] >> x[1];
+    }
 
-    cout << solve(n,arr1,arr2);
+    vector<vector<int>> queries(q,vector<int>(2));
+    for(auto &x : queries){
+        cin >> x[0] >> x[1];
+    }
+
+   
+
+    for(auto &x : collectMaximumOranges(n,q,trees,queries)){
+        cout << x << endl;
+    }
+
 
 
     return 0;

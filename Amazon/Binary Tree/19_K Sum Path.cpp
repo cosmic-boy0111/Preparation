@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,36 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+void solve(TreeNode* root,vector<int> temp,int sum,int & count, int k){
 
-int solve(int n,int arr1[],int arr2[]){
+    if(root == NULL) return;
+    temp.push_back(root->val);
+    solve(root->left,temp,sum,count,k);
+    solve(root->right,temp,sum,count,k);
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+    for(int i=temp.size()-1;i>=0;i--){
+        sum += temp[i];
+        if(sum == k) count++;
     }
 
 
-    return ans;
-
 }
 
+int sumK(TreeNode *root,int k){
+    int sum = 0;
+    int count = 0;
+    vector<int> temp;
+    solve(root,temp,sum,count,k);
+    return count;
+}
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

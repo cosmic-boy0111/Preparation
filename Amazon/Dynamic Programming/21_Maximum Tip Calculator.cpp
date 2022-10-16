@@ -82,42 +82,50 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+long long maxTip(int a[], int b[], int n, int x, int y) {
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
+    vector<vector<long long>> vec;
     for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+        vec.push_back({abs(a[i]-b[i]),a[i],b[i]});
     }
 
+    sort(vec.begin(),vec.end());
+    long long ans = 0;
+    for(int i=n-1;i>=0;i--){
+
+        if(vec[i][1] >= vec[i][2]){
+            if(x > 0){
+                ans += vec[i][1];
+                x--;
+            }else{
+                ans += vec[i][2];
+                y--;
+            }
+        }else{
+            if(y > 0){
+                ans += vec[i][2];
+                y--;
+            }else{
+                ans += vec[i][1];
+                x--;
+            }
+        }
+
+    }
 
     return ans;
 
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+   
+    int n , x , y;
+    cin >> n >> x >> y;
+    int a[n] , b[n];
+    for(int i=0;i<n;i++) cin >> a[i];
+    for(int i=0;i<n;i++) cin >> b[i];
 
-    cout << solve(n,arr1,arr2);
+    cout << maxTip(a,b,n,x,y);
 
 
     return 0;

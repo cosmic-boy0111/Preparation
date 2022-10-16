@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,72 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+class Node{
 
-int solve(int n,int arr1[],int arr2[]){
+    public:
+        int data;
+        Node* left;
+        Node* right;
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+        Node(int val){
+            data = val;
+            left = NULL;
+            right = NULL;
         }
+
+};
+
+
+void travel(Node* root,string temp,vector<string>& ans,unordered_map<int,bool>& mp){
+
+    if(root == NULL) return;
+    
+    travel(root->left,temp+'0',ans,mp);
+    if(mp.find(root->data) != mp.end()) ans.push_back(temp);
+    travel(root->right,temp+'1',ans,mp);
+
+}
+
+vector<string> huffmanCodes(string S,vector<int> f,int N){
+
+    priority_queue<pair<int,Node*>,vector<pair<int,Node*>>,greater<pair<int,Node*>>> pq;
+    unordered_map<int,bool> mp;
+    for(auto &x : f){
+        mp[x] = true;
+        pq.push({x,new Node(x)});
     }
 
+    while ( pq.size() > 1 ){
+        auto p1 = pq.top();
+        pq.pop();
+        auto p2 = pq.top();
+        pq.pop();
+        Node* n = new Node(p1.first+p2.first);
+        n->left = p1.second;
+        n->right = p2.second;
+        pq.push({n->data,n});
+    }
 
+    vector<string> ans;
+    travel(pq.top().second,"",ans,mp);
     return ans;
 
 }
 
-
 int32_t main(){
     
+
+    string s = "";
     int n;
     cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    vector<int> v(n);
+    for(auto &x : v)
+        cin >> x;
 
-    cout << solve(n,arr1,arr2);
+    for(auto &x : huffmanCodes(s,v,n))
+        cout << x << " ";
+    
+
 
 
     return 0;

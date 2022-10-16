@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -81,43 +81,48 @@ vector<pair<int,int>> pos = {
     {0,-1},{-1,0},{0,1},{1,0},
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
+   
+bool isSatisfy(int arr[],int N,int D,int W){
+    int count = 1, sum = 0;
+    for(int i=0;i<N;i++){
+        sum += arr[i];
+        if(sum > W){
+            sum = arr[i];
+            count++;
+        }
+    }
+    
+    return count <= D;
+}
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+int leastWeightCapacity(int arr[], int N, int D) {
+    int sum = 0;
+    int l = 0;
+    for(int i=0;i<N;i++) {
+        l = max(l,arr[i]);
+        sum += arr[i];
+    }
+    int h = sum;
+    int ans;
+    while (l<=h){
+        int mid = (l+h)/2;
+        if(isSatisfy(arr,N,D,mid)){
+            ans = mid;
+            h = mid-1;
+        }else{
+            l = mid+1;
         }
     }
 
 
     return ans;
-
+    
 }
-
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
 
-    cout << solve(n,arr1,arr2);
+
 
 
     return 0;

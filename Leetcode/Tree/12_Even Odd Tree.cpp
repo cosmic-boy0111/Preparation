@@ -82,42 +82,49 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+bool isEvenOddTree(TreeNode* root) {
+    queue<TreeNode* > q;
+    int pre = INT_MIN;
+    q.push(root);
+    q.push(NULL);
+    int lvl = 0;
+    while (! q.empty() ){
+        TreeNode* n = q.front();
+        q.pop();
+        if(lvl%2 == 0){
+            if(n->val%2 == 0) return false;
+            if(pre >= n->val) return false;
+        }else{
+            if(n->val%2 == 1) return false;
+            if(pre <= n->val) return false;
         }
+
+        pre = n->val;
+        if(n->left) q.push(n->left);
+        if(n->right) q.push(n->right);
+
+        if(q.front() == NULL){
+            q.pop();
+            cout << endl;
+            lvl++;
+            pre = lvl%2 == 0 ? INT_MIN : INT_MAX;
+            if(!q.empty()) q.push(NULL);
+        }
+
+
     }
+    
 
 
-    return ans;
-
+    return true;
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(10);
+    root->right = new TreeNode(4);
+    cout <<endl <<  isEvenOddTree(root);
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

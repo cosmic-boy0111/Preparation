@@ -82,42 +82,35 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int dp[801][801][3];
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+int solve(int h,int m,int count,int pre,vector<pair<int,int>>& condition){
+    if(h <= 0 || m <= 0) return 0;
+    if(dp[h][m][pre] != -1) return dp[h][m][pre];
+    int mx = INT_MIN;
+    for(int i=0;i<3;i++){
+        if(i == pre) continue;
+        int t = 1 + solve(h + condition[i].first, m + condition[i].second,count+1,i,condition);
+        mx = max(mx, t);
     }
+    return dp[h][m][pre] = mx;
+}
 
+int maxLevel(int h,int m){
 
-    return ans;
+    memset(dp,-1,sizeof(dp));
+    vector<pair<int,int>> v = {{-20,5},{-5,-10},{3,2}};
+    return solve(h,m,0,-1,v) - 1;
 
 }
 
-
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int h, m;
+    cin >> h >> m;
 
-    cout << solve(n,arr1,arr2);
+    cout << maxLevel(h,m);
+
 
 
     return 0;

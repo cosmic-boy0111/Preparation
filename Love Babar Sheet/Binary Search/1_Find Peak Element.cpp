@@ -82,42 +82,36 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+int findPeakElement(vector<int>& nums) {
+    int l = 0;
+    int n = nums.size();
+    int h =  n - 1;
+    while ( l <= h){
+        int mid = (l+h)/2;
+        if(mid > 0 and mid < n-1){
+            if(nums[mid] > nums[mid-1] and nums[mid] > nums[mid+1])return mid;
+            else if (nums[mid-1] > nums[mid]) h = mid-1;
+            else l = mid+1;
+        }else if(mid == 0){
+            if(nums[0] > nums[1]) return 0;
+            return 1;
+        }else{
+            if(nums[n-1] > nums[n-2]) return n-1;
+            else n-2;
         }
     }
 
-
-    return ans;
-
+    return -1;
+    
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

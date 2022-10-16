@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,43 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+vector<int> ExtremeNodes(TreeNode* root){
 
-int solve(int n,int arr1[],int arr2[]){
+    deque<TreeNode*> dq;
+    dq.push_back(root);
+    vector<vector<int>> ans;
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+    bool left = true;
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    while (!dq.empty()){
+        ans.push_back({dq.front()->val,dq.back()->val});
+        deque<TreeNode*> temp;
+        while (!dq.empty()){
+            TreeNode* t = dq.front();
+            dq.pop_front();
+            if(t->left) temp.push_back(t->left);
+            if(t->right) temp.push_back(t->right);
         }
+        dq = temp;
+    }
+    vector<int> result;
+    result.push_back(ans[0][0]);
+    for(int i=1;i<ans.size();i++){
+        if(i%2 == 0) result.push_back(ans[i][1]);
+        else result.push_back(ans[i][0]);
     }
 
-
-    return ans;
-
+    return result;
+    
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

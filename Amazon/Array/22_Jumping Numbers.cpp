@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,47 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+void solve(long long x,long long num,vector<long long>& temp){
 
-int solve(int n,int arr1[],int arr2[]){
+    queue<long long> q;
+    q.push(num);
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    while ( !q.empty() ){
+        num = q.front();
+        q.pop();
+        if(num <= x){
+            temp.push_back(num);
+            int last = num%10;
+            if(last == 0) q.push(num*10 + last+1);
+            else if(last == 9) q.push(num*10 + last-1);
+            else{
+                q.push(num*10 + last+1);
+                q.push(num*10 + last-1);
+            }
         }
     }
-
-
-    return ans;
+    
 
 }
 
+long long jumpingNums(long long X) {
+    vector<long long> temp;
+    for(int i=1;i<=9 and i<=X;i++){
+        solve(X,i,temp);
+    }
+
+    long long ans = LONG_LONG_MIN;
+    for(auto &x : temp) ans = max(ans,x);
+    return ans;
+}
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

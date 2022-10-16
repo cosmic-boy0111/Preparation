@@ -82,42 +82,48 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+map<int,int> mp;
 
-int solve(int n,int arr1[],int arr2[]){
+int subtreeSum(TreeNode* root){
+    if(root == NULL) return 0;
+    int sum = root->val + subtreeSum(root->left) + subtreeSum(root->right);
+    mp[sum]++;
+    return sum;
+}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+bool cmp(pair<int,int> p1, pair<int,int> p2){
+    return p1.first > p2.first;
+}
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+vector<int> findFrequentTreeSum(TreeNode* root) {
+    subtreeSum(root);
+    vector<pair<int,int>> v;
+    for(auto & x : mp){
+        v.push_back({x.second,x.first});
+    }
+    sort(v.begin(),v.end(),cmp);
+    vector<int> ans;
+
+    if(v.size() == 0) return {};
+    int frq = v[0].first;
+    for(auto &x : v){
+        if(x.first == frq) ans.push_back(x.second);
     }
 
 
+
     return ans;
-
 }
-
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    TreeNode* root = new TreeNode(5);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(-3);
 
-    cout << solve(n,arr1,arr2);
+
+    vector<int> ans = findFrequentTreeSum(root);
+    for(auto &x : ans) cout << x << " ";
 
 
     return 0;

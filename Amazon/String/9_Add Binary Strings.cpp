@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -83,41 +83,65 @@ vector<pair<int,int>> pos = {
 };
 
 
-int solve(int n,int arr1[],int arr2[]){
+string addBinary(string A, string B){
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+    if(B.size() > A.size()) swap(A,B);
+    reverse(A.begin(),A.end());
+    reverse(B.begin(),B.end());
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+    for(int i=B.size();i<A.size();i++){
+        B.push_back('0');
     }
 
 
-    return ans;
+    string ans = "";
+
+    int carry = 0;
+
+    for(int i=0;i<A.size();i++){
+
+        if(A[i] == '1' and B[i] == '1'){
+            ans.append(to_string(carry));
+            carry = 1;
+        }else{
+            if(A[i] == '0' and B[i] == '0'){
+                
+                ans.append(to_string(carry));
+                carry = 0;
+                continue;
+            }
+
+            ans.append(to_string(!carry));
+
+        }
+
+    }
+
+    if(carry) ans.append(to_string(carry));
+
+    reverse(ans.begin(),ans.end());
+
+    string result = "";
+    int found = false;
+    for(auto &x : ans){
+        if(x == '1') found = true;
+        if(found) result.push_back(x);
+    }
+
+
+    return result;
 
 }
 
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    string a , b;
+    cin >> a >> b;
 
-    cout << solve(n,arr1,arr2);
+
+    cout << addBinary(a,b);
+
 
 
     return 0;

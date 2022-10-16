@@ -82,43 +82,67 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+const int T = 1e5+10;
+int parent[T];
+int size[T];
 
-int solve(int n,int arr1[],int arr2[]){
+void make(int i){
+    parent[i] = i;
+    size[i] = 1;
+}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+int find(int v){
+    if(parent[v] == v) return v;
+    return find(parent[v]);
+}
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+void Union(int a,int b){
+    a = find(a);
+    b = find(b);
+
+    if(a != b){
+        if(size[a] < size[b]) swap(a,b);
+        parent[b] = a;
+        
+        size[a] += size[b];
+        size[b] = 0;
+        
     }
 
+}
+
+
+long long int numberOfPairs(vector<vector<int>> &pairs,int p,int n){
+
+    for(int i=0;i<n;i++) make(i);
+    for(auto &x : pairs){
+        Union(x[0],x[1]);
+    }
+
+    long long ans = 0 , sum = 0;
+    for(int i=0;i<n;i++){
+        cout << size[i] << " ";
+        ans += size[i]*sum;
+        sum += size[i];
+    }cout << endl;
 
     return ans;
 
 }
 
-
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    
+    int n , p;
+    cin >> n >> p;
 
-    cout << solve(n,arr1,arr2);
+    vector<vector<int>> pairs(p,vector<int>(2));
+    for(auto &x : pairs){
+        cin >> x[0] >> x[1];
+    }
+
+    cout << numberOfPairs(pairs,p,n);
 
 
     return 0;
-}
+} 

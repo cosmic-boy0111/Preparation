@@ -82,42 +82,35 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int LCSof3 (string A, string B, string C, int n1, int n2, int n3){
+    int dp[n1+1][n2+1][n3+1];
+    for(int i=0;i<=n1;i++)
+        for(int j=0;j<=n2;j++)
+            for(int k=0;k<=n3;k++)
+                if( i == 0 || j == 0 || k==0) dp[i][j][k] = 0;
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    for(int i=1;i<=n1;i++){
+        for(int j=1;j<=n2;j++){
+            for(int k=1;k<=n3;k++){
+                if(A[i-1] == B[j-1] and B[j-1] == C[k-1]){
+                    dp[i][j][k] = 1 + dp[i-1][j-1][k-1];
+                }else{
+                    dp[i][j][k] = max({dp[i-1][j][k],dp[i][j-1][k],dp[i][j][k-1]});
+                }
+            }
         }
     }
 
+    return dp[n1][n2][n3];
 
-    return ans;
-
+    
 }
-
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
+    string s1,s2,s3;
+    cin >> s1 >> s2 >> s3;
+    cout << LCSof3(s1,s2,s3,s1.size(),s2.size(),s3.size());
 
 
     return 0;

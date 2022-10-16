@@ -82,42 +82,31 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int dp[1001][1001];
 
-int solve(int n,int arr1[],int arr2[]){
+int solve(int i,int j,int arr[]){
+    if(i > j) return 0;
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
-
-
-    return ans;
-
+    if(dp[i][j] != -1)  return dp[i][j];
+    int op1 = arr[i] + min(solve(i+2,j,arr),solve(i+1,j-1,arr));
+    int op2 = arr[j] + min(solve(i,j-2,arr),solve(i+1,j-1,arr));
+    
+    return dp[i][j] = max(op1,op2);
 }
 
+int maxAmount(int arr[], int n){
+    memset(dp,-1,sizeof(dp));
+    return solve(0,n-1,arr);
+}
 
 int32_t main(){
     
     int n;
     cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
 
-    cout << solve(n,arr1,arr2);
+    cout << maxAmount(arr,n);
 
 
     return 0;

@@ -82,43 +82,42 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+void travel(TreeNode* root, vector<pair<int,TreeNode*>> & v){
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
-
-
-    return ans;
+    if(! root) return;
+    travel(root->left,v);
+    v.push_back({root->val,root});
+    travel(root->right,v);
 
 }
 
+void findPreSuc(TreeNode* root, TreeNode*& pre, TreeNode*& suc, int key){
+    
+    vector<pair<int,TreeNode*>> v;
+    travel(root,v);
+
+    if(key < v[0].first){
+        pre = NULL;
+        suc = v[0].second;
+    }else if(key > v[v.size()-1].first){
+        pre = v[v.size()-1].second;
+        suc = NULL;
+    }else{
+        int indx1 = 0;
+        int indx2 = 0;
+        pre = v[0].second;
+        suc = v[0].second;
+        for(int i=0;i<v.size();i++){
+            if(v[indx1].first < v[i].first and v[i].first < key) pre = v[i].second;
+            if(v[indx1].first > v[i].first and v[i].first > key) suc = v[i].second;
+        }
+
+    }
+
+}
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
-
 
     return 0;
 }

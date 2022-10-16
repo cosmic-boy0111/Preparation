@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,42 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int dp[510][510];
+int solve(int i,int j,int n,int m,vector<vector<int>>& path){
 
-int solve(int n,int arr1[],int arr2[]){
+    if( i > n || j > m) return 0;
+    if(path[i][j] == 0) return 0;
+    if(i == n and  j == m) return 1;
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+    if(dp[i][j] != -1) return dp[i][j];
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+    return dp[i][j] = solve(i+1,j,n,m,path) + solve(i,j+1,n,m,path);
+
+
+}
+
+int FindWays(int n, int m, vector<vector<int>>blocked_cells){
+    vector<vector<int>> path(n,vector<int>(m,1));
+    for(auto &x : blocked_cells){
+        path[x[0]-1][x[1]-1] = 0;
     }
-
+    memset(dp,-1,sizeof(dp));
+    int ans = solve(0,0,n-1,m-1,path);
 
     return ans;
 
 }
 
-
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
+    int n , m , k;
+    cin >> n >> m >> k;
+    vector<vector<int>> b(k,vector<int>(2));
+    for(auto &x : b){
+        cin >> x[0] >> x[1];
+    }
+    
+    cout << FindWays(n,m,b);
 
 
     return 0;

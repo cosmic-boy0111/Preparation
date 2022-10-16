@@ -82,42 +82,33 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+long long subarrayProduct(int n,int a[]){
+    long long ans = INT_MIN;
+    long long preSum[n];
+    preSum[0] = a[0];
+    for(int i =1;i<n;i++) preSum[i] = preSum[i-1] + a[i];
+    for(int i=1;i<n-1;i++){
+        for(int j=i;j<n-1;j++){
+            long long sum1 = preSum[i-1];
+            long long sum2 = preSum[n-1] - preSum[j];
+            long long sum3 = preSum[j] - preSum[i] + a[i];
+            ans = max(ans,sum1*sum2*sum3);
         }
     }
 
-
     return ans;
-
 }
-
 
 int32_t main(){
     
     int n;
     cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int a[n];
+    for(int i=0;i<n;i++){
+        cin >> a[i];
+    }
 
-    cout << solve(n,arr1,arr2);
+    cout << subarrayProduct(n,a);
 
 
     return 0;

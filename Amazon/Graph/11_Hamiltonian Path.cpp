@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,41 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+bool solve(int index,int N,vector<int> adj[],vector<int>& vis){
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+    vis[index] = 1;
+    for(auto &x : adj[index]){
+        if(vis[x]) continue;
+        if(solve(x,N-1,adj,vis)) return true;
     }
 
-
-    return ans;
+    vis[index] = 0;
+    if(N == 0) return true;
+    return false;
 
 }
 
+bool check(int N,int M,vector<vector<int>> Edges){
+    vector<int> adj[N+1];
+    for(auto &x : Edges){
+        adj[x[0]].push_back(x[1]);
+        adj[x[1]].push_back(x[0]);
+    }
+    vector<int> vis(N+1,0);
+    for(int i=1;i<=N;i++){
+        if(solve(i,N-1,adj,vis)) return true;
+    }
+
+    return false;
+}
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

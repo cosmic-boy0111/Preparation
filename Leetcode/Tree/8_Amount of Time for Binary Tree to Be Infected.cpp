@@ -82,42 +82,55 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+void travel(TreeNode* root,vector<int> adj[]){
+    if(!root ) return;
+    if(root->left){
+        adj[root->val].push_back(root->left->val);
+        adj[root->left->val].push_back(root->val);
+    }
+    if(root->right){
+        adj[root->val].push_back(root->right->val);
+        adj[root->right->val].push_back(root->val);
+    }
+    travel(root->left,adj);
+    travel(root->right,adj);
+}
 
-int solve(int n,int arr1[],int arr2[]){
+int amountOfTime(TreeNode* root, int start) {
+    int T = 1e5+10;
+    vector<int> adj[T];
+    travel(root,adj);
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    int ans = 0;
+    vector<int> vis(T,0);
+    queue<pair<int,int>> q;
+    q.push({start,0});
+    while (! q.empty()){
+        auto n = q.front();
+        q.pop();
+        int node = n.first;
+        int val = n.second;
+        ans = max(ans,val);
+        vis[node] = 1;
+        for(auto &x : adj[node]){
+            if(vis[x]) continue;
+            q.push({x,val+1});
         }
     }
 
-
     return ans;
+
 
 }
 
-
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
 
-    cout << solve(n,arr1,arr2);
+    cout << amountOfTime(root,3);
+
 
 
     return 0;

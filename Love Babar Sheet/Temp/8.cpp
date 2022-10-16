@@ -82,42 +82,47 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+vector<string> func(string textInput){
+    // transform(textInput.begin(), textInput.end(), textInput.begin(), ::tolower);
+    unordered_map<string,int> mp; 
+    string temp = "";
+    for(auto &x : textInput){
+        if(x == ' '){
+            mp[temp]++;
+            temp = "";
+            continue;
         }
+        temp.push_back(x);
+    }
+    mp[temp] ++;
+    vector<pair<int,string>> v;
+    for(auto &x : mp){
+        v.push_back({x.second,x.first});
     }
 
+    set<string> ans;
+    for(auto &x : v){
+        if(x.first <= 1) continue;
+        ans.insert(x.second);
+    }
 
-    return ans;
+    vector<string> result;
+    for(auto &x : ans) result.push_back(x);
 
+    vector<string> T ;
+    T.push_back("NA");
+    if(result.size() == 0) return T;
+    return result;
 }
+
 
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    string s = "cat barman latt cat matter matter CaT";
 
-    cout << solve(n,arr1,arr2);
+    for(auto &x : func(s))
+        cout << x << " ";
 
 
     return 0;

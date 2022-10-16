@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,47 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int isValid(vector<vector<int>> mat){
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    map<string,int>mp;
+       
+    for(int i=0;i<9;i++)
+    {
+        for(int j=0;j<9;j++)
+        {
+            int box = (i/3)*3+(j/3);
+            if(mat[i][j]!=0)
+            {
+                string s1 ="row" + to_string(i) +                 to_string(mat[i][j]);
+                string s2 ="col" + to_string(j) + to_string(mat[i][j]);
+                string s3 ="box" + to_string(box) + to_string(mat[i][j]);
+                mp[s1]++;
+                mp[s2]++;
+                mp[s3]++;
+                if(mp[s1]>1 || mp[s2]>1 || mp[s3]>1)
+                {
+                    return 0;
+                }
+            }
+            
         }
+    
     }
-
-
-    return ans;
+    
+    return 1;
 
 }
 
-
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int n = 9;
+    vector<vector<int>> mat(9,vector<int>(9));
+    for(auto &x : mat)
+        for(auto &y : x)
+            cin >> y;
 
-    cout << solve(n,arr1,arr2);
+
+    cout << isValid(mat);
 
 
     return 0;

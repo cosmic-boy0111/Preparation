@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -77,47 +77,56 @@ void display(ListNode* root){
 vector<int> adj[N];
 vector<bool> visited(N,false);
 
-vector<pair<int,int>> pos = {
-    {0,-1},{-1,0},{0,1},{1,0},
-    {-1,-1},{-1,1},{1,1},{1,-1}
+
+
+vector<pair<int,int>> Kpos = {
+    {-2,1},{-1,2},{1,2},{2,1},
+    {-2,-1},{-1,-2},{1,-2},{2,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+int minStepToReachTarget(vector<int>&KnightPos, vector<int>&TargetPos, int N){
+    int x1=KnightPos[0] ;
+    int y1=KnightPos[1] ;
+    
+    int x2=TargetPos[0] ;
+    int y2=TargetPos[1] ;
+    
+    int count=0 ;
+    if(x1==x2 and y1==y2) return 0 ;
+    queue<pair<int,int>> q ;
+    q.push({x1,y1}) ;
+    
+    vector<vector<int>> vis(N,vector<int>(N,0)) ;
+    while(!q.empty()){
+        int n=q.size() ;
+        count++ ;
+        while(n--){
+            auto temp=q.front() ;
+            q.pop() ;
+            for(int i=0 ; i<Kpos.size() ; i++){
+                int X=Kpos[i].first+temp.first ;
+                int Y=Kpos[i].second+temp.second ;
+                if(X==x2 and Y==y2) return count ;
+                if(X>=1 and Y>=1 and X<=N and Y<=N and !vis[X-1][Y-1]){
+                    vis[X-1][Y-1]=1 ;
+                    q.push({X,Y}) ;
+                }
+            }
         }
     }
-
-
-    return ans;
+    
+    return -1 ;
 
 }
 
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int n = 8;
+    vector<int> v1= {4,5};
+    vector<int> v2= {1,1};
 
-    cout << solve(n,arr1,arr2);
+    cout << minStepToReachTarget(v1,v2,n);
 
 
     return 0;

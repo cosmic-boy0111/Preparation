@@ -82,43 +82,40 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+TreeNode *treeFromString(string str){
+    stack<TreeNode*> st;
+    int s = str.size();
+    for(int i=0;i<s;i++){
+        char x = str[i];
+        if( x != '(' and x != ')'){
+            int num = 0;
+            while(i < s and isdigit(str[i])){
+                num = num*10 + str[i]-'0';
+                i++;
+            }
+            TreeNode* n = new TreeNode(num);
+            st.push(n);
+            i--;
+        }else if(x == ')'){
+            TreeNode* n = st.top();
+            st.pop();
+            TreeNode* root = st.top();
+            if(! root->left) root->left = n;
+            else root->right = n;
         }
+
+    
     }
 
-
-    return ans;
-
+    return st.top();
 }
 
-
 int32_t main(){
+
+    string s ;
+    cin >> s ;
+
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
-
 
     return 0;
 }

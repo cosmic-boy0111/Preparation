@@ -83,41 +83,80 @@ vector<pair<int,int>> pos = {
 };
 
 
-int solve(int n,int arr1[],int arr2[]){
+void travel(TreeNode* root ,string &s){
+    if(! root) return;
+    s.append(to_string(root->val) + '#');
+    travel(root->left,s);
+    travel(root->right,s);
+}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
-
-
+string serialize(TreeNode* root) {
+    string ans = "";
+    travel(root,ans);
     return ans;
-
 }
 
 
-int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+  
+stack<int> st;
+unordered_map<int,int> mp;
 
-    cout << solve(n,arr1,arr2);
+TreeNode* solve(int start, int end){
+    if(start > end)
+        return NULL;
+    if(start == end){
+        TreeNode* n = new TreeNode(st.top());
+        st.pop();
+        return n;
+    }
+    int t = st.top();
+    st.pop();
+    int i = mp[t];
+    TreeNode* root = new TreeNode(t);
+    root->left = solve(start,i-1);
+    root->right = solve(i+1,end);
+    return root;
+}
+
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    for(int i=preorder.size()-1;i>=0;i--)
+        st.push(preorder[i]);
+    for(int i=0;i<inorder.size();i++)
+        mp[inorder[i]] = i;
+    return solve(0,inorder.size()-1);
+    
+}
+
+
+TreeNode* deserialize(string data) {
+    vector<int> preorder;
+    string temp = "";
+    for(auto &x : data){
+        if(x == '#'){
+            preorder.push_back(stoi(temp));
+            temp = "";
+            continue;
+        }
+        temp.push_back(x);
+    }
+
+    vector<int> inorder = preorder;
+    sort(inorder.begin(),inorder.end());
+
+
+    return buildTree(preorder,inorder);
+
+}
+
+int32_t main(){
+    TreeNode* root = new TreeNode(2);
+    root->left = new TreeNode(1);
+    root->right = new TreeNode(3);
+
+    cout << serialize(root) << endl;
+    TreeNode* t = deserialize(serialize(root));
+
+
 
 
     return 0;

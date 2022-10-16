@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -83,25 +83,22 @@ vector<pair<int,int>> pos = {
 };
 
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+int maximumSumRectangle(int R, int C, vector<vector<int>> M) {
 
     int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    for(int i=0;i<R;i++){
+        int sub[C] = {0};
+        for(int j=i;j<R;j++){
+            int sum  =0 ;
+            for(int k=0;k<C;k++)
+                sub[k] += M[j][k];
+            for(int k=0;k<C;k++){
+                sum += sub[k];
+                ans = max(ans,sum);
+                if(sum < 0) sum = 0;
+            }
         }
     }
-
 
     return ans;
 
@@ -109,16 +106,18 @@ int solve(int n,int arr1[],int arr2[]){
 
 
 int32_t main(){
+
+    int r , c;
+    cin >> r >> c;
+
+    vector<vector<int>> mat(r,vector<int>(c,0));
+    for(auto &x : mat){
+        for(auto &y : x)
+            cin >> y;
+    }
+
+
+    cout << maximumSumRectangle(r,c,mat);
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
-
-
     return 0;
 }

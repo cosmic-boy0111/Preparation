@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,52 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+vector<vector<int>> generateMatrix(int n) {
+    int k = 1;
+    vector<vector<int>> ans(n,vector<int>(n,0));
+    int startRow = 0;
+    int startCol = 0;
+    int endRow = n-1;
+    int endCol = n-1;
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    while (startCol <= endCol and startRow <= endRow){
+        for(int i=startCol;i<=endCol;i++){
+            ans[startRow][i] = k++;
         }
+        startRow++;
+        for(int i=startRow;i<=endRow;i++){
+            ans[i][endCol] = k++;
+        }
+        endCol--;
+        if(startRow <= endRow){
+            for(int i=endCol;i>=startCol;i--){
+                ans[endRow][i] = k++;
+            }
+            endRow--;
+        }
+        if(startCol <= endCol){
+            for(int i=endRow;i>=startRow;i--){
+                ans[i][startCol] = k++;
+            }
+            startCol++;
+        }
+
     }
-
-
     return ans;
-
+    
 }
 
 
 int32_t main(){
     
-    int n;
+    int n ;
     cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    for(auto &x : generateMatrix(n)){
+        for(auto &y : x)
+            cout << y << " ";
+        cout << endl;
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

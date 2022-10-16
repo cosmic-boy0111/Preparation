@@ -78,46 +78,64 @@ vector<int> adj[N];
 vector<bool> visited(N,false);
 
 vector<pair<int,int>> pos = {
-    {0,-1},{-1,0},{0,1},{1,0},
-    {-1,-1},{-1,1},{1,1},{1,-1}
+    {0,-1},{-1,0},{0,1},{1,0}
 };
 
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+int solve(vector<vector<int>>& grid,vector<vector<int>>& vis,int totalZeros,int count ,int i,int j){
+    int n = grid.size();
+    int m = grid[0].size();
+    if(i < 0 || j < 0 || i >= n || j >= m || vis[i][j] == 1) return 0;
+    if(grid[i][j] == -1) return 0;
+    if(grid[i][j] == 2){
+        if(count == totalZeros) return 1;
+        return 0;
     }
 
+    vis[i][j] = 1;
+
+    int ans = 0;
+
+    for(auto &pr : pos){
+        int x = i + pr.first;
+        int y = j + pr.second;
+
+        ans += solve(grid,vis,totalZeros,count+1,x,y);
+
+    }
+
+    vis[i][j] = 0;
 
     return ans;
 
+
 }
 
+int uniquePathsIII(vector<vector<int>>& grid) {
+    
+    int totalZeros  = 0;
+    pair<int,int> start = {0,0};
+    int n = grid.size();
+    int m = grid[0].size();
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(grid[i][j] == 0) totalZeros++;
+            if(grid[i][j] == 1) start = {i,j};
+        }
+    }
+    vector<vector<int>> vis(n,vector<int>(m,0));
+
+    return solve(grid,vis,totalZeros,-1,start.first,start.second);
+
+}
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

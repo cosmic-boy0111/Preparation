@@ -82,43 +82,29 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+bool solve(int i,int j,vector<vector<int>>& grid,int k){
+    int n = grid.size();
+    int m = grid[0].size();
+    if(i <0 || j < 0 || i >= n || j >= m) return false;
+    if(i == n-1 and j == m-1){
+        k -= grid[i][j];
+        return k==0;
     }
 
-
-    return ans;
+    return solve(i+1,j,grid,k-grid[i][j]) || solve(i,j+1,grid,k-grid[i][j]);
 
 }
 
+bool gridSum(vector<vector<int>> &grid, int k){
+    return solve(0,0,grid,k);
+}
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    vector<vector<int>> grid = {{1,-1},{1,-1}};
+    int k = -1;
 
-    cout << solve(n,arr1,arr2);
-
+    cout << gridSum(grid,k);
 
     return 0;
 }

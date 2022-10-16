@@ -82,42 +82,46 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+long dp[102][1002];
 
-int solve(int n,int arr1[],int arr2[]){
+long solve(int n,int curr,int sum,string temp){
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+    if(curr == n and sum == 0){
+        return 1;
+    }
+    if(curr >= n) return 0;
+    if(sum < 0) return 0;
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+    if(dp[curr][sum] != -1) return dp[curr][sum];
+
+    long ans = 0;
+
+    for(int i=0;i<=9;i++){
+        if(curr == 0 and i == 0)continue;
+        curr += 1;
+        sum -= i;
+        ans = (ans + solve(n,curr,sum,temp))%1000000007;
+        curr -= 1;
+        sum += i;
     }
 
-
-    return ans;
+    return ans%1000000007;
 
 }
 
+long int countWays(int n, int Sum){
+    memset(dp,-1,sizeof(dp));
+    long ans = solve(n,0,Sum,"");
+    return ans == 0 ? -1 : ans;
+}
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int n , sum;
+    cin >> n  >> sum ;
 
-    cout << solve(n,arr1,arr2);
+    cout << countWays(n,sum);
+
 
 
     return 0;

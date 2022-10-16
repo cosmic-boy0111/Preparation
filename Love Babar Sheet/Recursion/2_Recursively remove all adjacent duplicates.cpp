@@ -83,41 +83,50 @@ vector<pair<int,int>> pos = {
 };
 
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+string rremove(string s){
+    if(s.size() == 1) return s;
+    stack<pair<char,int>> st;
+    for(auto &x : s){
+        if(st.empty()){
+            st.push({x,1});
+            continue;
         }
+        if(st.top().first == x){
+            auto t = st.top();
+            st.pop();
+            st.push({x,t.second+1});
+            continue;
+        }
+        if(st.top().second != 1){
+            st.pop();
+        }
+        if(st.top().first == x){
+            auto t = st.top();
+            st.pop();
+            st.push({x,t.second+1});
+            continue;
+        }
+        st.push({x,1});
+
+    }
+    if(!st.empty() and st.top().second != 1) st.pop();
+    string ans = "";
+    while ( !st.empty() ){
+        ans.push_back(st.top().first);
+        st.pop();
     }
 
-
+    reverse(ans.begin(),ans.end());
     return ans;
-
+    
 }
-
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    string s;
+    cin >> s;
 
-    cout << solve(n,arr1,arr2);
+    cout << rremove(s);
 
 
     return 0;

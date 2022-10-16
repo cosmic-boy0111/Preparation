@@ -4,7 +4,6 @@ using namespace std;
 #define vs vector<string>
 #define vb vector<bool>
 #define pi pair<int,int>
-#define mi map<int,int>
 #define umi unordered_map<int,int>
 #define qi queue<int>
 #define vpi vector<pi>
@@ -82,42 +81,52 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int solve(vector<int>& price,int index,int sum,int count,int buy){
+    if(index >= price.size()) return sum;
+    if(count < 0) return sum;
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+    int curr_profit = 0;
+    for(int i=index;i<price.size();i++){
+        if(price[i] < buy) return solve(price,index+1,sum + curr_profit,count-1,price[i]);
+        if(curr_profit < price[i]-buy) curr_profit = max(curr_profit,price[i]-buy);
+        else return(price,index+1,sum+curr_profit,count-1,price[i]);
     }
 
+    return curr_profit;
 
-    return ans;
 
 }
 
+int maxProfit(vector<int>&price){
+
+    int n = price.size();
+    int dp[n] = {0};
+    int mx = price[n-1];
+    int mi = price[0];
+
+    for(int i=n-2;i>=0;i--){
+        mx = max(mx,price[i]);
+        dp[i] = max(dp[i+1],mx-price[i]);
+    }
+
+    for(int i=1;i<n;i++){
+        mi = min(mi,price[i]);
+        dp[i] = max(dp[i-1],dp[i] + (price[i]-mi));
+    }
+
+    return dp[n-1];
+
+}
 
 int32_t main(){
     
     int n;
     cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    vector<int>arr(n);
+    for(auto &x : arr) cin >> x;
 
-    cout << solve(n,arr1,arr2);
+    cout << maxProfit(arr);
+
 
 
     return 0;

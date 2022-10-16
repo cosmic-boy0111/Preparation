@@ -83,41 +83,26 @@ vector<pair<int,int>> pos = {
 };
 
 
-int solve(int n,int arr1[],int arr2[]){
+int solve(int arr[],int n,int left,int right){
+    if(n == 0) return abs(left-right);
+    return min(solve(arr,n-1,left+arr[n-1],right),solve(arr,n-1,left,right+arr[n-1]));
+}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
-
-
-    return ans;
-
+int ninjaTypist(string &s,int n){
+    int arr[5];
+    for(int i=0;i<5;i++) arr[i] = 0;
+    for(auto &x : s) arr[x-'a']++;
+    return solve(arr,5,0,0);
 }
 
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    string s;
+    cin >> s;
 
-    cout << solve(n,arr1,arr2);
+    cout << ninjaTypist(s,s.size());
+
 
 
     return 0;

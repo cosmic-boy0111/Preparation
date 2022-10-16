@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -82,42 +82,39 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+  
+int solve(vector<int>& nums,int i,int j,vector<vector<int>>& dp){
+    
+    if(i == j) return nums[i];
+    if(dp[i][j] != -1) return dp[i][j];
+    int option1 = nums[i] - solve(nums,i+1,j,dp);
+    int option2 = nums[j] - solve(nums,i,j-1,dp);
 
-int solve(int n,int arr1[],int arr2[]){
+    return  dp[i][j] = max(option1,option2);
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+}
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
+bool PredictTheWinner(vector<int>& nums) {
+    vector<vector<int>> dp(nums.size()+1,vector<int>(nums.size()+1,-1));
+    return solve(nums,0,nums.size()-1,dp) >= 0;
+}
 
+bool is1winner(int N,int arr[]) {
+    vector<int> nums;
+    for(int i=0;i<N;i++) nums.push_back(arr[i]);
 
-    return ans;
-
+    return PredictTheWinner(nums);
+    
 }
 
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

@@ -82,42 +82,50 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+unordered_map<TreeNode*,TreeNode*> parent;
+TreeNode* temp(TreeNode* root,int home){
+    if(root == NULL) return NULL;
+    if(root->val == home) return root;
+    if(root->left) parent[root->left] = root;
+    if(root->right) parent[root->right] = root;
+    TreeNode* left = temp(root->left,home);
+    TreeNode* right = temp(root->right,home);
+    if(left) return left;
+    return right;
+}
 
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
-
-
-    return ans;
+int ans = 0;
+unordered_map<TreeNode*,bool> vis;
+void dfs(TreeNode* root,int k){
+    if(k < 0) return;
+    if(root == NULL) return;
+    vis[root] = true;
+    ans += root->val;
+    if( parent[root] != NULL and !vis[parent[root]]) dfs(parent[root],k-1);
+    if(root->left != NULL and !vis[root->left]) dfs(root->left,k-1);
+    if(root->right != NULL and !vis[root->right]) dfs(root->right,k-1);
 
 }
 
+int ladoos(TreeNode* root, int home, int k){
+    parent[root] = NULL;
+    TreeNode* home_Node = temp(root,home);
+    dfs(home_Node,k);
+
+    return ans;
+}
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(9);
+    root->left->left = new TreeNode(4);
+    root->right->left = new TreeNode(5);
+    root->right->right = new TreeNode(7);
 
-    cout << solve(n,arr1,arr2);
+    cout << endl << ladoos(root,9,1);
+
 
 
     return 0;

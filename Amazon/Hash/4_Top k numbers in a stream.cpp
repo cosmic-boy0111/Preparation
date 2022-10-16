@@ -82,42 +82,34 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
+vector<int> kTop(int a[], int n, int k){
+    unordered_map<int,int> mp;
+    vector<int> ans;
     for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+        mp[a[i]]++;
+        vector<pair<int,int>> temp;
+        for(auto &x : mp) temp.push_back(x);
+        sort(temp.begin(),temp.end(),[](pair<int,int> p1, pair<int,int> p2){
+            if(p1.second == p2.second) return p1.first < p2.first;
+            return p1.second > p2.second;
+        });
+        if(temp.size() < k) {
+            for(auto &x : temp) ans.push_back(x.first);
+        }else{
+            for(int i=0;i<k;i++) ans.push_back(temp[i].first);
         }
     }
 
-
     return ans;
-
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

@@ -81,43 +81,42 @@ vector<pair<int,int>> pos = {
     {0,-1},{-1,0},{0,1},{1,0},
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
-
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
-    }
-
-
-    return ans;
-
+bool static comp(vector<int>&v1 , vector<int>&v2){
+    if(v1[1]==v2[1]) return v1[2]<v2[2];
+    return v1[1]<v2[1];
+    
 }
 
 
-int32_t main(){
+vector<int> maxMeetings(int N,vector<int> &S,vector<int> &F){
+    vector<vector<int>> v;
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    for(int i=0 ;i<N ;i++){
+        v.push_back({S[i],F[i],i+1});
+    }
+    
+    sort(v.begin(),v.end(),comp);
+    int j=0;
+    vector<int> ans;
+    ans.push_back(v[j][2]);
+    
+    for(int i=1; i<N ;i++){
+        if(v[i][0]>v[j][1]){
+            j=i;
+            ans.push_back(v[i][2]);
+        }
+        
+    }
+    sort(ans.begin(),ans.end());
+    return ans;
+}
+int32_t main(){
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

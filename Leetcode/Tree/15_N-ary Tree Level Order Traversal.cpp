@@ -82,42 +82,74 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+class Node {
+public:
+    int val;
+    vector<Node*> children;
 
-int solve(int n,int arr1[],int arr2[]){
+    Node() {}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+    Node(int _val) {
+        val = _val;
+    }
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    Node(int _val, vector<Node*> _children) {
+        val = _val;
+        children = _children;
+    }
+};
+
+vector<vector<int>> levelOrder(Node* root) {
+    vector<vector<int>> ans;
+    queue<Node*> q;
+    q.push(root);
+    q.push(NULL);
+    vector<int> temp;
+    while ( !q.empty() ){
+        Node* n = q.front();
+        q.pop();
+        temp.push_back(n->val);
+        for(auto &x : n->children){
+            q.push(x);
+        }
+        if(q.front() == NULL){
+            q.pop();
+            ans.push_back(temp);
+            temp = {};
+            if(!q.empty()) q.push(NULL);
         }
     }
 
-
     return ans;
-
+    
 }
+        
+  
 
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
 
-    cout << solve(n,arr1,arr2);
+
+    Node* n2 = new Node(2);
+    Node* n3 = new Node(3);
+    Node* n4 = new Node(4);
+    vector<Node*> v;
+    v.push_back(n2);
+    v.push_back(n3);
+    v.push_back(n4);
+
+
+    Node* root = new Node(1,v);
+
+    cout << root->val <<  " : ";
+    for(auto &x : root->children)
+        cout << x->val << " ";
+
+
+
+
+
 
 
     return 0;

@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 #define vi vector<int>
 #define vs vector<string>
 #define vb vector<bool>
@@ -24,18 +23,19 @@ void printBinary(int n){
     }cout << endl;
 }
 
-class TreeNode{
-    public:
+struct TreeNode{
         int val;
         TreeNode* left;
         TreeNode* right;
-
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
 };
+
+TreeNode* newTreeNode(int data){
+    TreeNode* n = new TreeNode();
+    n->val = data;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
+}
 
 class ListNode{
     public:
@@ -57,7 +57,6 @@ void insertAtTail(ListNode* &root,int val){
     while (temp->next != NULL){
         temp = temp->next;
     }
-
     temp->next = new ListNode(val); 
 }
 
@@ -76,32 +75,61 @@ void display(ListNode* root){
 #define maxHeapInt priority_queue<int,vector<int>>
 #define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
 #define maxHeapPair priority_queue<pi,vector<pi>>
-
 vector<int> adj[N];
 vector<bool> visited(N,false);
+
 vector<pair<int,int>> pos = {
     {0,-1},{-1,0},{0,1},{1,0},
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+void Travel(TreeNode* root,vector<int>& v){
+    if(root == NULL) return;
+    Travel(root->left,v);
+    v.push_back(root->val);
+    Travel(root->right,v);
+}
 
+TreeNode* solve(vector<int>& v,int start, int end){
+    if(start == end) {
+        return newTreeNode(v[start]);
+    }
+    int mid = (end + start) / 2;
+    TreeNode* root = newTreeNode(v[end]);
+    root->left = solve(v,start,mid-1);
+    root->right = solve(v,mid,end-1);
+    return root;
+}
+
+void convertToMaxHeapUtil(TreeNode* &root){
+    vector<int> v;
+    Travel(root,v);
+    root = solve(v,0,v.size()-1);
+}  
+
+
+void postOrder(TreeNode* root){
+    if(!root) return;
+    postOrder(root->left);
+    postOrder(root->right);
+    cout << root->val << " ";
+}
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    vector<int> v;
+    TreeNode* root = newTreeNode(4);
+    root->left = newTreeNode(2);
+    root->left->left = newTreeNode(1);
+    root->left->right = newTreeNode(3);
+    root->right = newTreeNode(6);
+    root->right->left = newTreeNode(5);
+    root->right->right = newTreeNode(7);
 
-    int mn = INT_MAX;
-    for(int i=0;i<n;i++){
-        int x;
-        cin >> x;
-        v.push_back(x);
-        mn = min(mn,x);
-    }
+    // postOrder(root);
+    convertToMaxHeapUtil(root);
+    postOrder(root);
 
-    cout << mn << endl;
-    
-    
+
+
     return 0;
 }

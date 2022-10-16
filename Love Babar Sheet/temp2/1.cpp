@@ -82,42 +82,38 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int find(int n,int a[]){
+    if(n == 1) return a[0];
 
-int solve(int n,int arr1[],int arr2[]){
+    while ( n != 1){
+        int k = 0;
+        int i = 0;
+        int j = 1;
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+        while ( j < n ){
+            a[k] = abs(a[i]-a[j]);
+            i = i+2;
+            j = j+2;
+            k++;
         }
+
+        n = n/2;
+        
     }
 
 
-    return ans;
+    return a[0];
 
 }
-
 
 int32_t main(){
     
     int n;
     cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    int arr[n];
+    for(int i=0;i<n;i++) cin >> arr[i];
 
-    cout << solve(n,arr1,arr2);
+    cout << find(n,arr);
 
 
     return 0;

@@ -82,42 +82,52 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+set<string> ans;
 
-int solve(int n,int arr1[],int arr2[]){
+bool isCon(char c){
+    if( c == 'a' || c=='e' || c=='i' || c=='o' || c == 'u') return false;
+    return true;
+}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+void solve(string S,string temp,int n,int index){
+    if(index >= n){
+        if(temp == "" || temp.size() == 1) return;
+        if(isCon(temp[temp.size()-1])){
+            ans.insert(temp);
+        }
+        return;
+    }
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    if(!isCon(S[index])){
+        temp.push_back(S[index]);
+        solve(S,temp,n,index+1);
+        temp.pop_back();
+        solve(S,temp,n,index+1);
+    }else{
+        if(temp.size() == 0)
+            solve(S,temp,n,index+1);
+        else{
+            temp.push_back(S[index]);
+            solve(S,temp,n,index+1);
+            temp.pop_back();
+            solve(S,temp,n,index+1);
         }
     }
 
-
-    return ans;
-
 }
 
+set<string> allPossibleSubsequences(string S) {
+    solve(S,"",S.size(),0);
+    return ans;
+}
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
+    string s;
+    cin >> s;
+    for(auto &x : allPossibleSubsequences(s)){
+        cout << x << endl;
+    }
 
 
     return 0;

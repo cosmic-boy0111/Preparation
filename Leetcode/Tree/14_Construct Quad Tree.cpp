@@ -82,42 +82,79 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+class Node {
+public:
+    bool val;
+    bool isLeaf;
+    Node* topLeft;
+    Node* topRight;
+    Node* bottomLeft;
+    Node* bottomRight;
+    
+    Node() {
+        val = false;
+        isLeaf = false;
+        topLeft = NULL;
+        topRight = NULL;
+        bottomLeft = NULL;
+        bottomRight = NULL;
+    }
+    
+    Node(bool _val, bool _isLeaf) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = NULL;
+        topRight = NULL;
+        bottomLeft = NULL;
+        bottomRight = NULL;
+    }
+    
+    Node(bool _val, bool _isLeaf, Node* _topLeft, Node* _topRight, Node* _bottomLeft, Node* _bottomRight) {
+        val = _val;
+        isLeaf = _isLeaf;
+        topLeft = _topLeft;
+        topRight = _topRight;
+        bottomLeft = _bottomLeft;
+        bottomRight = _bottomRight;
+    }
+};
 
-int solve(int n,int arr1[],int arr2[]){
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+Node* solve(vector<vector<int>>& grid, int i,int j,int n){
+    int one = 0;
+    int zero = 0;
+    for(int k=i;k<i+n;k++){
+        for(int l=j;l<j+n;l++){
+            if(grid[k][l] == 0) zero = 1;
+            else one = 1;
+            if(zero and one){
+                Node* root = new Node(1,false);
+                root->topLeft = solve(grid,i,j,n/2);
+                root->topRight = solve(grid,i,j+n/2,n/2);
+                root->bottomLeft = solve(grid,i+n/2,j,n/2);
+                root->bottomRight = solve(grid,i+n/2,j+n/2,n/2);
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+                return root;
+
+            }
         }
     }
 
-
-    return ans;
-
+    return new Node(grid[i][j],true);
 }
 
+Node* construct(vector<vector<int>>& grid) {
+    int n = grid.size();
+    return solve(grid,0,0,n);
+}
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

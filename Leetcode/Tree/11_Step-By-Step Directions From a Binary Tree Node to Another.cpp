@@ -82,42 +82,58 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+void traval(TreeNode* root,vector<pair<int,char>> adj[]){
+    if(!root) return;
+    if(root->left){
+        adj[root->val].push_back({root->left->val,'L'});
+        adj[root->left->val].push_back({root->val,'U'});
+    }
+    if(root->right){
+        adj[root->val].push_back({root->right->val,'R'});
+        adj[root->right->val].push_back({root->val,'U'});
     }
 
+    traval(root->left,adj);
+    traval(root->right,adj);
+
+}
+
+string ans = "";
+void solve(vector<pair<int,char>> adj[],vector<int>& vis,int index,int destValue,string temp){
+    if(index == destValue){
+        if(ans.size() == 0) ans = temp;
+        if(ans.size() > temp.size()) ans = temp;
+
+        return;
+    }
+
+    vis[index] = 1;
+    for(auto &x : adj[index]){
+        if(vis[x.first]) continue;
+        temp.push_back(x.second);
+        solve(adj,vis,x.first,destValue,temp);
+        temp.pop_back();
+    }
+
+}
+
+string getDirections(TreeNode* root, int startValue, int destValue) {
+    int T = 1e5+10;
+    vector<pair<int,char>> adj[T];
+    traval(root,adj);
+    vector<int> vis(T,0);
+    solve(adj,vis,startValue,destValue,"");
 
     return ans;
 
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
 
-    cout << solve(n,arr1,arr2);
+    cout << getDirections(root,3,2);
 
 
     return 0;

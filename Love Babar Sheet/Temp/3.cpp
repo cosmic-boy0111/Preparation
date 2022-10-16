@@ -82,43 +82,52 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+unordered_map<int,int> mp;
 
-int solve(int n,int arr1[],int arr2[]){
+int factorial(int n) {
+    if(n == 0 || n == 1)
+      return 1;
+    if(mp.find(n) != mp.end()) return mp[n];
+    return mp[n] = (n*factorial(n-1))%1000000009;
+}
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+int nCr(int n, int r) {
+    return (factorial(n) / ((factorial(r) * factorial(n - r)))%1000000009)%1000000009;
+}
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+int diwaliLights(int n,int k,vector<vector<int>> & light){
+    sort(light.begin(),light.end());
+    vector<int> v;
+    int i = n-1;
+    while (i >= 0){
+        int count = 1;
+        int j;
+        for(j = i-1;j>=0;j--){
+            if(light[i][0] <= light[j][1]) count++;
+        }
+        v.push_back(count);
+        i = j+1;
+    }
+    int mod = 1e9+7;
+    int ans = 0;
+    for(auto &x : v){
+        if(x < k) continue;;
+        if(x == k){
+            ans = (ans+1)%mod;
+        }else{
+            int f = nCr(x,k);
+            ans = (ans + f)%mod;
         }
     }
 
-
     return ans;
-
+    
 }
-
 
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
-
-    cout << solve(n,arr1,arr2);
-
-
+    int n = 5 , k = 2;
+    vector<vector<int>> v = {{1,3},{2,4},{3,5},{4,6},{5,7}};
+    cout << diwaliLights(n,k,v);
     return 0;
 }

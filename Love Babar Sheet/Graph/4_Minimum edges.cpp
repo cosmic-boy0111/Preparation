@@ -82,42 +82,57 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
+int minimumEdgeReversal(vector<vector<int>> &edges,int n,int src,int dst){
 
-int solve(int n,int arr1[],int arr2[]){
+    vector<pair<int,int>> adj[n+1];
+    for(auto x : edges){
+        int u = x[0];
+        int v = x[1];
+        adj[u].push_back({v,0});
+        adj[v].push_back({u,1});
+    }
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+    vector<int> dist(n+1,1e9);
+    vector<int> visited(n+1,0);
+    pq.push({0,src});
+    dist[src] = 0;
+    while ( !pq.empty() ){
+        auto pr = pq.top();
+        pq.pop();
+        int u = pr.second;
+        visited[u] = 1;
+        for(auto &x : adj[u]){
+            int v = x.first;
+            int wt = x.second;
+            if(visited[v]) continue;
+            if(dist[v] > dist[u] + wt){
+                dist[v] = dist[u] + wt;
+                pq.push({dist[v],v});
+            }
         }
     }
 
-
-    return ans;
+    if(dist[dst] == 1e9) return -1;
+    return dist[dst];
 
 }
 
-
 int32_t main(){
     
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    // int n , m;
+    // cin >> n >> m;
+    // vector<vector<int>> v(m,vector<int>(2));
+    // for(auto &x : v)
+    //     cin >> x[0] >> x[1];
+    // int src , dst;
+    // cin >> src >> dst;
 
-    cout << solve(n,arr1,arr2);
+    // cout << minimumEdgeReversal(v,n,src,dst);
+
+    string s = "abc";
+    s[0] = 'p';
+    cout << s << endl;
 
 
     return 0;

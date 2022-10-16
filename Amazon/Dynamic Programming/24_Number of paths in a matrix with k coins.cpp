@@ -82,42 +82,35 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+long long solve(vector<vector<int>>& arr, int i,int j, int n,int k,
+vector<vector<vector<long long>>>& dp
+){
+    if(i == n-1 and j == n-1){
+        k -= arr[i][j];
+        return k == 0;
     }
 
+    if(i == n || j == n || k < 0) return 0;
+    if(dp[i][j][k] != -1) return dp[i][j][k];
 
-    return ans;
+    
+    return dp[i][j][k] = solve(arr,i+1,j,n,k-arr[i][j],dp) + solve(arr,i,j+1,n,k-arr[i][j],dp);
+
+}   
+
+long long numberOfPath(int n, int k, vector<vector<int>> arr){
+    vector<vector<vector<long long>>> dp(n+1,vector<vector<long long>>(n+1,vector<long long>(k+1,-1)));
+    return solve(arr,0,0,n,k,dp);
 
 }
 
-
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

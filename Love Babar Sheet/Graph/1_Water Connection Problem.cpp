@@ -82,42 +82,39 @@ vector<pair<int,int>> pos = {
     {-1,-1},{-1,1},{1,1},{1,-1}
 };
 
-
-int solve(int n,int arr1[],int arr2[]){
-
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
-
-    int ans = INT_MIN;
+vector<vector<int>> solve(int n,int p,vector<int> a,vector<int> b,vector<int> d){
+    vector<int> indgree(n+1,0);
+    vector<pair<int,int>> adj{n+1,{-1,-1}};
     for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
+        adj[a[i]] = {b[i],d[i]};
+        indgree[b[i]]++;
+    }
+
+    vector<vector<int>>  ans;
+    for(int i=1;i<=n;i++){
+        if(indgree[i] == 0 and adj[i].first != -1){
+            int last = adj[i].first;
+            int mn = adj[i].second;
+            while (adj[last].first != -1){
+                last = adj[last].first;
+                mn = min(mn,adj[last].second);
+            }
+            ans.push_back({i,last,mn});
+            
         }
     }
 
-
     return ans;
-
 }
 
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;

@@ -29,11 +29,11 @@ class TreeNode{
         TreeNode* left;
         TreeNode* right;
 
-        TreeNode(int data = 0){
-            val = data;
-            left = NULL;
-            right = NULL;
-        }
+TreeNode(int data = 0){
+val = data;
+left = NULL;
+right = NULL;
+}
 };
 
 class ListNode{
@@ -78,46 +78,51 @@ vector<int> adj[N];
 vector<bool> visited(N,false);
 
 vector<pair<int,int>> pos = {
-    {0,-1},{-1,0},{0,1},{1,0},
-    {-1,-1},{-1,1},{1,1},{1,-1}
+    {0,-1},{-1,0},{0,1},{1,0}
 };
 
+bool dfs(int i,int j,vector<vector<char>> &board,string s,int index,vector<vector<int>>& vis){
 
-int solve(int n,int arr1[],int arr2[]){
+    int n = board.size();
+    int m = board[0].size();
+    vis[i][j] = 1;
+    if(index >= s.size()) return true;
+    for(auto &pr : pos){
 
-    int arrpS1[n];
-    int arrpS2[n];
-    arrpS1[0] = arr1[0];
-    arrpS2[0] = arr2[0];
-    for(int i=1;i<n;i++) arrpS1[i] = arr1[i] + arrpS1[i-1];
-    for(int i=1;i<n;i++) arrpS2[i] = arr2[i] + arrpS2[i-1];
+        int x = i+pr.first;
+        int y = j+pr.second;
+        if( x < 0 or y < 0 or x >= n or y >= m or s[index] != board[x][y] or vis[x][y]) continue;
 
-    int ans = INT_MIN;
-    for(int i=0;i<n;i++){
-        for(int j=i;j<n;j++){
-            if(i == 0)
-                ans = max(ans, arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-            else
-                ans = max(ans, arrpS1[i-1] + arrpS2[j] - arrpS2[i] + arr2[i]  + arrpS1[n-1] - arrpS1[j]);
-        }
+        if(dfs(x,y,board,s,index+1,vis)) return true;
     }
 
-
-    return ans;
+    return false;
 
 }
 
+bool isWordExist(vector<vector<char>>& board, string word) {
+    int n = board.size();
+    int m = board[0].size();
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(board[i][j] == word[0]){
+                vector<vector<int>> vis(n,vector<int>(m,0));
+                if(dfs(i,j,board,word,1,vis)) return true;
+            }
+        }
+    }
+
+    return false;
+}
 
 int32_t main(){
-    
-    int n;
-    cin >> n;
-    int arr1[n];
-    int arr2[n];
-    for(int i=0;i<n;i++) cin >> arr1[i];
-    for(int i=0;i<n;i++) cin >> arr2[i];
+    long long T;
+    cin >> T;
+    while(T--){
+        
+    }
 
-    cout << solve(n,arr1,arr2);
 
 
     return 0;
