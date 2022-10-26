@@ -21,7 +21,4 @@ l2 = list(map(int,input().strip().split()))
 
 ans = solve(n,l1,l2)
 
-for i in range(len(ans)):
-    if i + 1 > len(ans):
-        print(ans[i])
-    print(ans[i],end=" ")
+print(ans)
