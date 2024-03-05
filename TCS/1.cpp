@@ -1,39 +1,76 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
+#define vi vector<int>
+#define vs vector<string>
+#define vb vector<bool>
+#define pi pair<int,int>
+#define mi map<int,int>
+#define umi unordered_map<int,int>
+#define qi queue<int>
+#define vpi vector<pi>
+#define vvi vector<vi>
+#define ff first
+#define ss second 
+#define inc(i,a,b) for(int i=a;i<b;i++)
+#define dec(i,a,b) for(int i=a;i>=b;i--)
+#define each(x,target) for(auto &x:target)
+const int N = 1e6, MOD = 1e9+7;
 
-int main(){
+void printBinary(int n){
+    for(int i=10;i>=0;i--){
+        if((n>>i) & 1) cout << 1;
+        else cout << 0;
+    }cout << endl;
+}
 
-    int n;
-    cin >> n;
-    while (true){
-        if(n < 100 || n>200 ){
+class node{
+    public:
+        int val;
+        node* left;
+        node* right;
 
-            cout << "INVALID INPUT" << endl;
-            break;
+        node(int data = 0){
+            val = data;
+            left = NULL;
+            right = NULL;
         }
+};
 
-        if(n % 2 == 0){
-
-            cout << n/4 << endl;
-            cout << n/4 << endl;
-            cout << n/4 << endl;
-            cout << n/4 << endl;
-            
-        }else {
-            int sum = n/4 + n/4 + n/4;
-            cout << n/4 << endl;
-            cout << n/4 << endl;
-            cout << n/4 << endl;
-            cout << n - sum << endl;
-        }
+#define minHeapInt priority_queue<int,vector<int>,greater<int>>
+#define maxHeapInt priority_queue<int,vector<int>>
+#define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
+#define maxHeapPair priority_queue<pi,vector<pi>>
 
 
+vector<int> adj[N];
+bool vis[N];
 
+void DFS(int vertex){
+    
+    cout << vertex << " ";
+    vis[vertex] = true;
 
-        break;
+    for (auto v : adj[vertex])
+    {
+        if(vis[v]) continue;
+        DFS(v);
     }
     
 
-    return 0;
+}
+
+int main(){
+
+    int node, edge;
+    cin >> node >> edge ;
+    int x , y;
+    inc(i, 0 , edge){
+        cin >> x >> y;
+        adj[x].push_back(y);
+        adj[y].push_back(x); 
+    }
+
+    DFS(1);
+
 }
