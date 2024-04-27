@@ -46,31 +46,9 @@ class node{
 vector<int> adj[N];
 bool vis[N];
 
-void DFS(int vertex){
+
+int32_t main(){
+
     
-    cout << vertex << " ";
-    vis[vertex] = true;
-
-    for (auto v : adj[vertex])
-    {
-        if(vis[v]) continue;
-        DFS(v);
-    }
-    
-
-}
-
-int main(){
-
-    int node, edge;
-    cin >> node >> edge ;
-    int x , y;
-    inc(i, 0 , edge){
-        cin >> x >> y;
-        adj[x].push_back(y);
-        adj[y].push_back(x); 
-    }
-
-    DFS(1);
 
 }
