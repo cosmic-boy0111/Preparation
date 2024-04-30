@@ -76,7 +76,7 @@ int32_t main(){
             }
         }
 
-        while(q--){
+        while(q--){  
             int l,r;
             cin>> l >> r;
             int oddct = 0;
