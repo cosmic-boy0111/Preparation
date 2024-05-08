@@ -1,6 +1,9 @@
 # Preparation
  
-cpp snippets 
+# font
+"Source Code Pro Regular",
+
+# cpp snippets 
 
 "cpp snippets": {
 		"prefix": "cpp snippets",
