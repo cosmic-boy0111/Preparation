@@ -59,22 +59,90 @@ int32_t main(){
 
     // map implemented by red black trees 
 
-    map<int, string> mp;
-    mp[1] = "abc"; // O(log(n))
-    mp[5] = "cde";
-    mp[3] = "acd";
+    // map<int, string> mp;
+    // mp[1] = "abc"; // O(log(n))
+    // mp[5] = "cde";
+    // mp[3] = "acd";
 
-    mp.insert({4, "afg"});
+    // mp.insert({4, "afg"});
 
-    auto it = mp.find(7); // O(log(n))
-    if(it != mp.end()){
-        mp.erase(it); // O(log(n))
+    // auto it = mp.find(7); // O(log(n))
+    // if(it != mp.end()){
+    //     mp.erase(it); // O(log(n))
+    // }
+
+
+    // print(mp);
+
+    // mp.clear();
+
+    // print(mp);
+
+    // int n;
+    // cin >> n;
+    // map<string, int> mp;
+
+    // for(int i = 0; i < n; i++){
+    //     string s;
+    //     cin >> s;
+    //     mp[s] ++;
+    // }
+
+    // for(auto& x: mp){
+    //     cout << x.first << " " << x.second << endl;
+    // }
+    
+
+    // int n;
+    // cin >> n;
+    // vector<string> s_vec(n);
+
+    // for(auto& x: s_vec) cin >> x;
+
+    // for(int i = 0; i < s_vec.size(); i++){
+    //     string curr_str = s_vec[i];
+    //     if(curr_str[0] == ' ') continue;
+    //     int count = 1;
+    //     for(int j = i+1; j < s_vec.size(); j++){
+    //         if(s_vec[j][0] == ' ') continue;
+    //         if(curr_str == s_vec[j]){
+    //             count++;
+    //             s_vec[j][0] = ' ';
+    //         }
+    //     }
+
+    //     cout << curr_str << " " << count << endl;
+    // }
+    
+
+    // unordered_map<int, string> mp; //has table 
+    // mp[1] = "abc"; // O(1)
+    // mp[5] = "cde";
+    // mp[3] = "acd";
+    // mp[6] = "a";
+
+    // mp.insert({4, "afg"});
+
+    // print(mp);
+
+    unordered_map<string, int> mp;
+    int n;
+    cin >> n;
+
+    for(int i = 0; i < n; i++){
+        string s;
+        cin >> s;
+        mp[s]++;
     }
 
+    int q;
+    cin >> q;
+    while (q--){
+        string s;
+        cin >> s;
+        cout << mp[s] << endl;
+    }
+    
 
-    print(mp);
 
-    mp.clear();
-
-    print(mp);
 }
