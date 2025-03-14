@@ -46,32 +46,58 @@ class node{
 vector<int> adj[N];
 bool vis[N];
 
+/*
+  0 1 2 3
+a  
+b 
+c 
+d 
+e 
+f 
+g 
+h 
+i 
+j
+
+
+*/
+long long wonderfulSubstrings(string word) {
+    long long ans = 0;
+    int n = word.size();
+    map<int, vector<long long>> mp;
+    for(int i = 0; i <= n; i++) {
+        mp[i] = vector<long long>(10, 0);
+    }
+
+    for(int i = 1; i <= n; i++) {
+        mp[i][word[i - 1] - 'a']++;
+    }
+
+    for(int i = 0; i < 10; i++) {
+        for(int j = 1; j<=n; j++) {
+            mp[j][i] += mp[j - 1][i];
+        }
+    }
+
+    for(int i = 0; i < n; i++) {
+        for(int j = i+1; j <= n; j++) {
+            int oddCnt = 0;
+            for(int k=0; k < 10; k++) {
+                oddCnt += ((mp[j][k] - mp[i][k]) % 2 == 1);
+            }
+            if(oddCnt <= 1) ans++;
+        }
+    }
+    
+    return ans;
+
+}
 
 int32_t main(){
 
-    int n;
-    cin >> n;
+    string s;
+    cin >> s;
 
-    int arr[n];
-    for(int i = 0; i < n; i++){
-        cin >> arr[i];
-    }
-
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
-    }
-
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
-    }
-    if(arr[n-1] > mx_prev) ans++;
-
-    cout << ans << endl;
+    cout << wonderfulSubstrings(s) << endl;
 
 }

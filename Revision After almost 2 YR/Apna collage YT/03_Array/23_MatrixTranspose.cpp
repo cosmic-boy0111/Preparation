@@ -52,26 +52,23 @@ int32_t main(){
     int n;
     cin >> n;
 
-    int arr[n];
+    int arr[n][n];
     for(int i = 0; i < n; i++){
-        cin >> arr[i];
+        for(int j = 0; j < n; j++){
+            cin >> arr[i][j];
+        }
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
+    for(int i = 0; i < n; i++){
+        for(int j = i+1; j < n; j++){
+            swap(arr[i][j], arr[j][i]);
+        }
     }
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            cout << arr[i][j] << " ";
+        }cout << endl;
     }
-    if(arr[n-1] > mx_prev) ans++;
-
-    cout << ans << endl;
 
 }

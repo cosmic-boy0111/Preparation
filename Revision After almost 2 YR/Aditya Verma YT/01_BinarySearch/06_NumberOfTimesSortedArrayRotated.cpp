@@ -51,26 +51,38 @@ int32_t main(){
 
     int n;
     cin >> n;
-
     int arr[n];
     for(int i = 0; i < n; i++){
         cin >> arr[i];
     }
-
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
-    }
+    
+    int start = 0;
+    int end = n - 1;
 
     int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
+
+    while(start <= end){
+        int mid = start + (end - start) / 2;
+        int next = (mid + 1) % n;
+        int prev = (mid - 1 + n) % n;
+        cout << arr[prev] << " " << arr[mid] << " " << arr[next] << endl;
+        if(arr[mid] <= arr[next] && arr[mid] <= arr[prev]){
+            ans = n - mid == n ? 0 : n - mid;
+            break;
+        }
+        if(arr[start] <= arr[mid]){
+            if(arr[mid] >= arr[end])
+                start = mid + 1;
+            else
+                end = mid - 1;
+        }
+        if(arr[start] >= arr[mid]){
+            if(arr[mid] <= arr[end])
+                end = mid - 1;
+            else
+                start = mid + 1;
+        }
     }
-    if(arr[n-1] > mx_prev) ans++;
 
     cout << ans << endl;
 

@@ -57,21 +57,16 @@ int32_t main(){
         cin >> arr[i];
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
+    unordered_map<int,int> mp;
+    int ans = INT_MAX;
+    for(int i = 0; i < n; i++){
+        if(mp.find(arr[i]) != mp.end()){
+            ans = min(ans, mp[arr[i]]);
+            continue;
+        }
+        mp[arr[i]] = i;
     }
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
-    }
-    if(arr[n-1] > mx_prev) ans++;
-
-    cout << ans << endl;
+    cout << (ans == INT_MAX ? -1 : ans + 1) << endl;
 
 }

@@ -4,9 +4,14 @@
 "Source Code Pro Regular",
 
 # cpp snippets 
-
-"cpp snippets": {
-		"prefix": "cpp snippets",
+{
+	// Place your snippets for csharp here. Each snippet is defined under a snippet name and has a prefix, body and 
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+	// same ids are connected.
+	// Example:
+	"cpp 01 snippets": {
+		"prefix": "cpp 01 snippets",
 		"body": [
 			"#include <bits/stdc++.h>",	
 			"using namespace std;",
@@ -59,9 +64,36 @@
 			"",
 			"int32_t main(){",
 			"",
-			"    $1",
+			"    $0",
 			"",
 			"}",
 		],
 		"description": "Log output to console"
+	},
+	"cpp 02 array int snippets": {
+		"prefix": "cpp 02 int array snippets",
+		"body": [
+			"int n;",
+			"cin >> n;",
+			"int arr[n];",
+			"for(int i = 0; i < n; i++){",
+			"    cin >> arr[i];",
+			"}",
+			"$0"
+		],
+		"description": "Log output to console"
+	},
+	"cpp 03 array char snippets": {
+		"prefix": "cpp 03 char array snippets",
+		"body": [
+			"int n;",
+			"cin >> n;",
+			"char arr[n];",
+			"for(int i = 0; i < n; i++){",
+			"    cin >> arr[i];",
+			"}",
+			"$0"
+		],
+		"description": "Log output to console"
 	}
+}

@@ -46,32 +46,38 @@ class node{
 vector<int> adj[N];
 bool vis[N];
 
+int kadaneAlgo(int arr[], int n){
+    int ans = INT_MIN;
+    int currSum = 0;
+    for(int i=0; i<n; i++){
+        currSum += arr[i];
+        if(currSum < 0) currSum = 0;
+        ans = max(ans, currSum);
+    }
+    return ans;
+}
 
 int32_t main(){
 
     int n;
     cin >> n;
-
     int arr[n];
-    for(int i = 0; i < n; i++){
+    for(int i=0; i<n; i++){
         cin >> arr[i];
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
+    int wrapsum = 0;
+    int nonwrapsum = 0;
+
+    nonwrapsum = kadaneAlgo(arr, n);
+
+    int totalSum = 0;
+    for(int i=0; i<n; i++){
+        totalSum += arr[i];
+        arr[i] = -arr[i];
     }
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
-    }
-    if(arr[n-1] > mx_prev) ans++;
+    totalSum = totalSum + kadaneAlgo(arr, n);
 
-    cout << ans << endl;
-
+    cout << max(totalSum, nonwrapsum) << endl;
 }

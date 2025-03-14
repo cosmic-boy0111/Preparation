@@ -49,29 +49,46 @@ bool vis[N];
 
 int32_t main(){
 
+    // pre-computation
     int n;
     cin >> n;
-
+    
     int arr[n];
     for(int i = 0; i < n; i++){
         cin >> arr[i];
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
-    }
+    // int presum[n + 1] = {0};
+    // for(int i = 1; i <= n; i++){
+    //     presum[i] = presum[i-1] + arr[i - 1];
+    // }
+    
+    // /*
+    // 1 2 3 4
+    // 1     -> [1]
+    // 1 2   -> [1, 2] [2]
+    // 1 2 3  -> [1, 2, 3] [2, 3] [3]
+    // 1 2 3 4 -> [1, 2, 3, 4] [ 2, 3, 4] [3, 4] [4]
+    // */
+    // int ans = INT_MIN;
+    // for(int i = 1; i <= n; i++){
+    //     for(int j = 0; j < i; j++){
+    //         int sum = presum[i] - presum[j];
+    //         ans = max(ans, sum);
+    //     }
+    // }
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
+    // cout << ans << endl;
+
+    int currSum = 0;
+    int ans = INT_MIN;
+    for(int i=0;i<n;i++){
+        currSum += arr[i];
+        if(currSum < 0) currSum = 0;
+        ans = max(ans, currSum);
     }
-    if(arr[n-1] > mx_prev) ans++;
 
     cout << ans << endl;
+    
 
 }

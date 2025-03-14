@@ -46,32 +46,38 @@ class node{
 vector<int> adj[N];
 bool vis[N];
 
+bool pairSum(int arr[], int n, int k){
+    int Nx = 1e3 + 10;
+    int temp[Nx] = {0};
+    for(int i = 0; i < n; i++){
+        if(temp[arr[i]]){
+            cout << temp[arr[i]] << " " << i << endl;
+            return true;
+        }
+        temp[abs(arr[i] - k)] = i;
+    }
+    return false;
+}
 
 int32_t main(){
 
     int n;
     cin >> n;
-
     int arr[n];
+
     for(int i = 0; i < n; i++){
         cin >> arr[i];
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
-    }
+    int k;
+    cin >> k;
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
-    }
-    if(arr[n-1] > mx_prev) ans++;
-
-    cout << ans << endl;
+    cout << pairSum(arr, n, k) << endl;
 
 }
+/*
+8
+2 4 7 11 14 16 20 21
+31
+
+*/

@@ -49,29 +49,45 @@ bool vis[N];
 
 int32_t main(){
 
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
 
-    int arr[n];
+    int arr[n][m];
     for(int i = 0; i < n; i++){
-        cin >> arr[i];
+        for(int j = 0; j < m; j++){
+            cin >> arr[i][j];
+        }
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
-    }
+    int rowStart = 0;
+    int rowEnd = n - 1;
+    int colStart = 0;
+    int colEnd = m - 1;
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
+    while (rowStart <= rowEnd && colStart <= colEnd){
+        for(int i = colStart; i <= colEnd ; i++){
+            cout << arr[rowStart][i] << " ";
+        }
+        rowStart++;
+        for(int i = rowStart; i <= rowEnd ; i++){
+            cout << arr[i][colEnd] << " ";
+        }
+        colEnd--;
+        for(int i = colEnd; i >= colStart ; i--){
+            cout << arr[rowEnd][i] << " ";
+        }        
+        rowEnd--;
+        for(int i = rowEnd; i >= rowStart ; i--){
+            cout << arr[i][colStart] << " ";
+        }
+        colStart++;
     }
-    if(arr[n-1] > mx_prev) ans++;
-
-    cout << ans << endl;
+    
 
 }
+/*
+1 2 3 4
+1 2 3 4
+1 2 3 4
+
+*/

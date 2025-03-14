@@ -49,29 +49,39 @@ bool vis[N];
 
 int32_t main(){
 
-    int n;
-    cin >> n;
+    int n, s;
+    cin >> n >> s;
 
     int arr[n];
     for(int i = 0; i < n; i++){
         cin >> arr[i];
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
+    int sum = 0;
+    int j = 0;
+    int i = 0;
+    while(j < n && sum + arr[j] <= s){
+        sum += arr[j];
+        j++;
     }
-
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
+    if(sum == s) {
+        cout << i+1 << " " << j << endl;
+        return 0;
     }
-    if(arr[n-1] > mx_prev) ans++;
+    while(j < n){
+        sum += arr[j];
+        while (sum > s){
+            sum -= arr[i];
+            i++;
+        }
 
-    cout << ans << endl;
+        if(sum == s) {
+            cout << i+1 << " " << j+1 << endl;
+            break;
+        }
+
+        j++;
+           
+    }
 
 }

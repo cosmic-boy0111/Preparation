@@ -49,29 +49,42 @@ bool vis[N];
 
 int32_t main(){
 
-    int n;
-    cin >> n;
-
-    int arr[n];
-    for(int i = 0; i < n; i++){
-        cin >> arr[i];
+    int n1, n2, n3;
+    cin >> n1 >> n2 >> n3;
+    int arr1[n1][n2];
+    for(int i = 0; i < n1; i++){
+        for(int j = 0; j < n2; j++){
+            cin >> arr1[i][j];
+        }
     }
 
-    int mx = INT_MIN;
-    for(int i = 0 ; i < n ; i ++){
-        mx = max(mx, arr[i]);
+    int arr2[n2][n3];
+    for(int i = 0; i < n2; i++){
+        for(int j = 0; j < n3; j++){
+            cin >> arr2[i][j];
+        }
     }
 
-    int ans = 0;
-    if(arr[0] > arr[1]) ans++;
-    int mx_prev = arr[0];
-    for(int i = 1; i < n-1; i++){
-        if(arr[i] > mx_prev && arr[i] > arr[i+1]) ans++;
-        mx_prev = max(mx_prev, arr[i]);
-        if(mx_prev == mx) break;
+    int ans[n1][n3];
+    for(int i = 0; i < n1; i++){
+        for(int j = 0; j < n3; j++){
+            ans[i][j] = 0;
+        }
     }
-    if(arr[n-1] > mx_prev) ans++;
 
-    cout << ans << endl;
+    for(int i = 0; i < n1; i++){
+        for(int j = 0; j < n3; j++){
+            for(int k = 0; k < n2; k++){
+                ans[i][j] += arr1[i][k] * arr2[k][j]; 
+            }
+        }
+    }
+
+    for(int i = 0; i < n1; i++){
+        for(int j = 0; j < n3; j++){
+            cout << ans[i][j] << " ";
+        }cout << endl;
+    }
 
 }
+
