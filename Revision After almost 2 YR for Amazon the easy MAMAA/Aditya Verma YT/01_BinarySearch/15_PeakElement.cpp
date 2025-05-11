@@ -16,12 +16,14 @@ using namespace std;
 #define dec(i,a,b) for(int i=a;i>=b;i--)
 #define each(x,target) for(auto &x:target)
 const int N = 1e6, MOD = 1e9+7;
+
 void printBinary(int n){
     for(int i=10;i>=0;i--){
         if((n>>i) & 1) cout << 1;
         else cout << 0;
     }cout << endl;
 }
+
 class node{
     public:
         int val;
@@ -35,52 +37,54 @@ class node{
         }
 };
 
+#define minHeapInt priority_queue<int,vector<int>,greater<int>>
+#define maxHeapInt priority_queue<int,vector<int>>
+#define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
+#define maxHeapPair priority_queue<pi,vector<pi>>
 
 
-int main(){
-    
+vector<int> adj[N];
+bool vis[N];
+
+
+int32_t main(){
+
     int n;
     cin >> n;
-    vector<int> v(n);
-    for(auto &i:v)
-        cin >> i;
+    int arr[n];
+    for(int i = 0; i < n; i++){
+        cin >> arr[i];
+    }
+    
+    int start = 0;
+    int end = n - 1;
 
-    int lo = 0, hi = n-1;
-    int ans = -1;
-    while (lo <= hi){
-        int mid = lo + (hi-lo)/2;
-        if(mid > 0 and mid < n-1){
-            if(v[mid] > v[mid-1] and v[mid] > v[mid+1]){
-                ans = mid; 
+    while(start <= end){
+        int mid = start + (end - start) / 2;
+        if(mid > 0 && mid < n - 1){
+            if(arr[mid] > arr[mid - 1] && arr[mid] > arr[mid + 1]){
+                cout << arr[mid] << endl;
                 break;
-            }else if(v[mid-1] > v[mid]){
-                hi = mid-1;
+            }else if(arr[mid - 1] > arr[mid]){
+                end = mid - 1;
             }else{
-                lo = mid+1;
+                start = mid + 1;
             }
         }else if(mid == 0){
-            if(v[0] > v[1]){
-                ans = 0;
-                break;
+            if(arr[0] > arr[1]){
+                cout << arr[0] << endl;
             }else{
-                ans = 1;
-                break;
+                cout << arr[1] << endl;
             }
+            break;
         }else{
-            if(v[n-1] > v[n-2]){
-                ans = n-1;
-                break;
+            if(arr[n-1] > arr[n-2]){
+                cout << arr[n-1] << endl;
             }else{
-                ans = n-2;
-                break;
+                cout << arr[n-2] << endl;
             }
+            break;
         }
     }
 
-    cout << ans << endl;
-
-
-    
-    
-    return 0;
 }

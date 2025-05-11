@@ -16,12 +16,14 @@ using namespace std;
 #define dec(i,a,b) for(int i=a;i>=b;i--)
 #define each(x,target) for(auto &x:target)
 const int N = 1e6, MOD = 1e9+7;
+
 void printBinary(int n){
     for(int i=10;i>=0;i--){
         if((n>>i) & 1) cout << 1;
         else cout << 0;
     }cout << endl;
 }
+
 class node{
     public:
         int val;
@@ -35,52 +37,52 @@ class node{
         }
 };
 
+#define minHeapInt priority_queue<int,vector<int>,greater<int>>
+#define maxHeapInt priority_queue<int,vector<int>>
+#define minHeapPair priority_queue<pi,vector<pi>,greater<pi>>
+#define maxHeapPair priority_queue<pi,vector<pi>>
 
 
-int main(){
-    
+vector<int> adj[N];
+bool vis[N];
+
+
+int32_t main(){
+
     int n;
     cin >> n;
-    vector<int> v(n);
-    for(auto &i:v)
-        cin >> i;
+    int arr[n];
+    for(int i = 0; i < n; i++){
+        cin >> arr[i];
+    }
+    
+    int k;
+    cin >> k;
 
-    int lo = 0, hi = n-1;
-    int ans = -1;
-    while (lo <= hi){
-        int mid = lo + (hi-lo)/2;
-        if(mid > 0 and mid < n-1){
-            if(v[mid] > v[mid-1] and v[mid] > v[mid+1]){
-                ans = mid; 
-                break;
-            }else if(v[mid-1] > v[mid]){
-                hi = mid-1;
+    int i = 0;
+    int j = 0;
+
+    queue<int> q;
+
+    while (j < n){
+        if(arr[j] < 0){
+            q.push(arr[j]);
+        }
+        if(j - i + 1 < k){
+            j++;
+        }else if(j - i + 1 == k){
+            if(!q.empty()){
+                cout << q.front() << " ";
             }else{
-                lo = mid+1;
+                cout << 0 << " ";
             }
-        }else if(mid == 0){
-            if(v[0] > v[1]){
-                ans = 0;
-                break;
-            }else{
-                ans = 1;
-                break;
+            if(!q.empty() and arr[i] == q.front()){
+                q.pop();
             }
-        }else{
-            if(v[n-1] > v[n-2]){
-                ans = n-1;
-                break;
-            }else{
-                ans = n-2;
-                break;
-            }
+            j++;
+            i++;
         }
     }
-
-    cout << ans << endl;
-
-
     
-    
-    return 0;
+
 }

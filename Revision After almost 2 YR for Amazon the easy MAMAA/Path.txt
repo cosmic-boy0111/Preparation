@@ -3,8 +3,9 @@
 3. Pattern           -> Aapna collage
 4. Digit conversion  -> Aapna kaksha
 5. Array             -> Aapna collage
-6. Recursion and backtracking -> Aditya verma & Luv & Aapna collage
 7. sorting           -> Aapna collage
 8. Binary Search     -> Aditya Verma, Luv
+9. Sliding window    -> Aditya Verma
+6. Recursion and backtracking -> Aditya verma & Luv & Aapna collage
 
 
