@@ -6,6 +6,16 @@
 7. sorting           -> Aapna collage
 8. Binary Search     -> Aditya Verma, Luv
 9. Sliding window    -> Aditya Verma
-6. Recursion and backtracking -> Aditya verma & Luv & Aapna collage
+6. Recursion         -> Aditya verma & Luv & Aapna collage
+7. stack             -> Aditya Verma
 
 
+sorted array -> think binary Search
+
+output is greater than input, choise, or next step is depend upon the previous one or problem is recursively design -> think recursion
+
+if previous data is going to use or in O(n^2) the second loop is somehow depends on the previous one like first is ith loop and second is jth loop is jth loop using the i in its condition -> think stack
+
+if next data is going to help in next stage -> think queue
+
+if for current state the ans is depend on from whole previous data -> think Precomputation

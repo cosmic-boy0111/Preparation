@@ -46,24 +46,6 @@ class node{
 vector<int> adj[N];
 bool vis[N];
 
-/*
-Find the Rotation Count in Rotated Sorted array
-Consider an array of distinct numbers sorted in increasing order. The array has been rotated (clockwise) k number of times. Given such an array, find the value of k.
-
-Examples:
-
-Input : arr[] = {15, 18, 2, 3, 6, 12}
-Output: 2
-Explanation : Initial array must be {2, 3,
-6, 12, 15, 18}. We get the given array after 
-rotating the initial array twice.
-
-Input : arr[] = {7, 9, 11, 12, 5}
-Output: 4
-
-Input: arr[] = {7, 9, 11, 12, 15};
-Output: 0
-*/
 
 int32_t main(){
 
@@ -74,34 +56,32 @@ int32_t main(){
         cin >> arr[i];
     }
     
-    int start = 0;
-    int end = n - 1;
+    stack<int> st;
 
-    int ans = 0;
+    vector<int> ans;
 
-    while(start <= end){
-        int mid = start + (end - start) / 2;
-        int next = (mid + 1) % n;
-        int prev = (mid - 1 + n) % n;
-         cout << arr[prev] << " " << arr[mid] << " " << arr[next] << endl;
-        if(arr[mid] <= arr[next] && arr[mid] <= arr[prev]){
-            ans = n - mid == n ? 0 : n - mid;
-            break;
+    for(int i = 0; i < n ; i++){
+        if(st.empty()){
+            ans.push_back(-1);
+            st.push(arr[i]);
+            continue;
         }
-        if(arr[start] <= arr[mid]){
-            start = mid;
+
+        while (!st.empty() && st.top() <= arr[i]){
+            st.pop();
         }
-        else if(arr[mid] <= arr[end]){
-            end = mid;
+        
+        if(st.empty()){
+            ans.push_back(-1);
+        }else{
+            ans.push_back(st.top());
         }
+
+        st.push(arr[i]);
     }
 
-    cout << ans << endl;
+    for(auto& x : ans){
+        cout << x << " ";
+    }
 
 }
-
-/*
-0  1  2 3 4 5
-15 18 2 3 6 12
-
-*/

@@ -1,7 +1,9 @@
 {
     "editor.mouseWheelZoom": true,
     "files.associations": {
+        ".fantomasignore": "ignore",
         "ostream": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "iostream": "cpp"
     }
 }
