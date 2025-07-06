@@ -8,6 +8,8 @@
 9. Sliding window    -> Aditya Verma
 6. Recursion         -> Aditya verma & Luv & Aapna collage
 7. stack             -> Aditya Verma
+8. Linked list       -> Aapna collage & TUF
+9. Binary Tree       -> Aapna collage
 
 
 sorted array -> think binary Search
