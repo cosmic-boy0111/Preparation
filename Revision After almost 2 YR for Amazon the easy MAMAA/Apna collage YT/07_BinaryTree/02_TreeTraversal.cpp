@@ -28,12 +28,14 @@ class node{
     public:
         int val;
         node* next;
+        node* prev;
         node* left;
         node* right;
 
         node(int data = 0){
             val = data;
             next = NULL;
+            prev = NULL;
             left = NULL;
             right = NULL;
         }
@@ -48,37 +50,45 @@ class node{
 vector<int> adj[N];
 bool vis[N];
 
-
-node* ArrayToLinkedList(vector<int> &v){
-    if(v.size() == 0) return nullptr;
-    node* head = new node(v[0]);
-    node* mover = head;
-    for(int i = 1; i < v.size(); i++){
-        node* n = new node(v[i]);
-        mover->next = n;
-        mover = n;
-    }
-    return head;
+void preOrder(node* root){
+    if(root == nullptr) return;
+    cout << root->val << " ";
+    preOrder(root->left);
+    preOrder(root->right);
 }
 
-void display(node* head){
-    while(head != nullptr){
-        cout << head->val << "->";
-        head = head->next;
-    }cout << "null" << endl;
+void inOrder(node* root){
+    if(root == nullptr) return;
+    inOrder(root->left);
+    cout << root->val << " ";
+    inOrder(root->right);
 }
 
+void postOrder(node* root){
+    if(root == nullptr) return;
+    postOrder(root->left);
+    postOrder(root->right);
+    cout << root->val << " ";
+}
 
 int32_t main(){
 
-    int n;
-    cin >> n;
-    vector<int> v(n);
-    for(auto& x : v){
-        cin >> x;
-    }
-    
-    node* head = ArrayToLinkedList(v);
-    display(head);
+    node* root = new node(1);
+    root->left = new node(2);
+    root->right = new node(3);
 
+    root->left->left = new node(4);
+    root->left->right = new node(5);
+    preOrder(root);
+    cout << endl;
+    inOrder(root);
+    cout << endl;
+    postOrder(root);
+    cout << endl;
 }
+
+/*
+            1
+        2       3
+    4       5
+*/

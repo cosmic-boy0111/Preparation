@@ -9,7 +9,7 @@
 6. Recursion         -> Aditya verma & Luv & Aapna collage
 7. stack             -> Aditya Verma
 8. Linked list       -> Aapna collage & TUF
-9. Binary Tree       -> Aapna collage
+9. Binary Tree       -> Aapna collage & TUF
 
 
 sorted array -> think binary Search
@@ -21,3 +21,12 @@ if previous data is going to use or in O(n^2) the second loop is somehow depends
 if next data is going to help in next stage -> think queue
 
 if for current state the ans is depend on from whole previous data -> think Precomputation
+
+
+
+
+
+
+
+/// problems need to visit
+width of binary tree
