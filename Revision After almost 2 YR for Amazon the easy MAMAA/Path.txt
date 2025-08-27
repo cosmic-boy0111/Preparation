@@ -10,6 +10,8 @@
 7. stack             -> Aditya Verma
 8. Linked list       -> Aapna collage & TUF
 9. Binary Tree       -> Aapna collage & TUF
+10. Graph            -> Luv
+11. DSU              -> Luv
 
 
 sorted array -> think binary Search
@@ -22,6 +24,7 @@ if next data is going to help in next stage -> think queue
 
 if for current state the ans is depend on from whole previous data -> think Precomputation
 
+if there are nodes and unko jodna/group etc or find out the distinct group try using DSU
 
 
 
